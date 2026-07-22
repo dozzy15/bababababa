@@ -82,7 +82,7 @@
 
     local themes = {
         preset = {
-            accent = rgb(155, 150, 219),
+            accent = rgb(104, 2, 2),
         }, 
 
         utility = {
@@ -1509,7 +1509,7 @@
                     SortOrder = Enum.SortOrder.LayoutOrder
                 });
                 
-                -- Toggle (siempre tipo switch)
+                                -- Toggle (siempre tipo switch)
                     items[ "toggle_button" ] = library:create( "TextButton" , {
                         FontFace = fonts.font;
                         TextColor3 = rgb(0, 0, 0);
@@ -1565,8 +1565,7 @@
                     library:create( "UICorner" , {
                         Parent = items[ "circle" ];
                         CornerRadius = dim(0, 999)
-                    });                      
-                    end 
+                    });                       
                 --                
             end;
             
@@ -1582,7 +1581,7 @@
                 end
 
                 flags[cfg.flag] = bool
-            end 
+            end  
             
             items[ "toggle" ].MouseButton1Click:Connect(function()
                 cfg.enabled = not cfg.enabled 
