@@ -1420,7 +1420,7 @@
                 info = options.info or nil,
                 flag = options.flag or library:next_flag(),
                 
-                type = "toggle"
+                type = "toggle";
 
                 default = options.default or false,
                 folding = options.folding or false, 
