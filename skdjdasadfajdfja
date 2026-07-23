@@ -1,4 +1,4 @@
-
+--[[
 
     Milenium Library
     -> Made by @finobe 
@@ -82,7 +82,7 @@
 
     local themes = {
         preset = {
-            accent = rgb(150, 0, 0),
+            accent = rgb(155, 150, 219),
         }, 
 
         utility = {
@@ -711,7 +711,7 @@
                     Name = "\0";
                     TextColor3 = themes.preset.accent;
                     BorderColor3 = rgb(0, 0, 0);
-                    Text = '<font color="rgb(72, 72, 73)">K7, </font>' .. cfg.name .. cfg.suffix;
+                    Text = '<font color="rgb(72, 72, 73)">32 days left, </font>' .. cfg.name .. cfg.suffix;
                     Size = dim2(1, 0, 0, 0);
                     Position = dim2(0, -10, 0.5, -1);
                     AnchorPoint = vec2(0, 0.5);
@@ -1565,11 +1565,11 @@
                     library:create( "UICorner" , {
                         Parent = items[ "circle" ];
                         CornerRadius = dim(0, 999)
-                    });                       
+                    });                      
                 --                
             end;
             
-                       function cfg.set(bool)
+            function cfg.set(bool)
                 library:tween(items[ "toggle_button" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(58, 58, 62)}, Enum.EasingStyle.Quad)
                 library:tween(items[ "inline" ], {BackgroundColor3 = bool and themes.preset.accent or rgb(50, 50, 50)}, Enum.EasingStyle.Quad)
                 library:tween(items[ "circle" ], {BackgroundColor3 = bool and rgb(255, 255, 255) or rgb(86, 86, 88), Position = bool and dim2(1, -14, 0, 2) or dim2(0, 2, 0, 2)}, Enum.EasingStyle.Quad)
@@ -1581,7 +1581,10 @@
                 end
 
                 flags[cfg.flag] = bool
-            end  
+            end 
+
+                flags[cfg.flag] = bool
+            end 
             
             items[ "toggle" ].MouseButton1Click:Connect(function()
                 cfg.enabled = not cfg.enabled 
