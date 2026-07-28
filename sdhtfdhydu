@@ -1100,64 +1100,64 @@
         end 
 
         -- Miscellaneous 
-            function library:column(properties) 
-                local cfg = {items = {}, size = properties.size or 1}
+function library:column(properties) 
+    local cfg = {items = {}, size = properties.size or 1}
 
-                local items = cfg.items; do     
-                    items[ "column" ] = library:create( "Frame" , {
-                        Parent = self[ "parent" ] or self.items["tab_parent"];
-                        BackgroundTransparency = 1;
-                        Name = "\0";
-                        BorderColor3 = rgb(0, 0, 0);
-                        Size = dim2(0, 0, cfg.size, 0);
-                        BorderSizePixel = 0;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });
-                    
-                    library:create( "UIPadding" , {
-                        PaddingBottom = dim(0, 10);
-                        Parent = items[ "column" ]
-                    });
-                    
-                    library:create( "UIListLayout" , {
-                        Parent = items[ "column" ];
-                        HorizontalFlex = Enum.UIFlexAlignment.Fill;
-                        Padding = dim(0, 10);
-                        FillDirection = Enum.FillDirection.Vertical;
-                        SortOrder = Enum.SortOrder.LayoutOrder
-                    });
-                end 
+    local items = cfg.items; do     
+        items[ "column" ] = library:create( "Frame" , {
+            Parent = self[ "parent" ] or self.items["tab_parent"];
+            BackgroundTransparency = 1;
+            Name = "\0";
+            BorderColor3 = rgb(0, 0, 0);
+            Size = dim2(1, 0, 1, 0);
+            BorderSizePixel = 0;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });
 
-                return setmetatable(cfg, library)
-            end 
+        library:create( "UIPadding" , {
+            PaddingBottom = dim(0, 10);
+            Parent = items[ "column" ]
+        });
+
+        library:create( "UIListLayout" , {
+            Parent = items[ "column" ];
+            HorizontalFlex = Enum.UIFlexAlignment.Fill;
+            Padding = dim(0, 10);
+            FillDirection = Enum.FillDirection.Vertical;
+            SortOrder = Enum.SortOrder.LayoutOrder
+        });
+    end 
+
+    return setmetatable(cfg, library)
+end
 
             function library:sub_tab(properties) 
-                local cfg = {items = {}, order = properties.order or 0; size = properties.size or 1}
+    local cfg = {items = {}, order = properties.order or 0; size = properties.size or 1}
 
-                local items = cfg.items; do 
-                    items[ "tab_parent" ] = library:create( "Frame" , {
-                        Parent = self.items[ "tab" ];
-                        BackgroundTransparency = 1;
-                        Name = "\0";
-                        Size = dim2(0,0,cfg.size,0);
-                        BorderColor3 = rgb(0, 0, 0);
-                        BorderSizePixel = 0;
-                        Visible = true;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });
-                    
-                    library:create( "UIListLayout" , {
-                        FillDirection = Enum.FillDirection.Horizontal;
-                        HorizontalFlex = Enum.UIFlexAlignment.Fill;
-                        VerticalFlex = Enum.UIFlexAlignment.Fill;
-                        Parent = items[ "tab_parent" ];
-                        Padding = dim(0, 7);
-                        SortOrder = Enum.SortOrder.LayoutOrder;
-                    });
-                end
+    local items = cfg.items; do 
+        items[ "tab_parent" ] = library:create( "Frame" , {
+            Parent = self.items[ "tab" ];
+            BackgroundTransparency = 1;
+            Name = "\0";
+            Size = dim2(1, 0, 1, 0);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            Visible = true;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });
 
-                return setmetatable(cfg, library)
-            end 
+        library:create( "UIGridLayout" , {
+            Parent = items[ "tab_parent" ];
+            CellSize = dim2(0.5, -5, 0, 0);
+            CellPadding = dim2(0, 7, 0, 7);
+            FillDirection = Enum.FillDirection.Vertical;
+            SortOrder = Enum.SortOrder.LayoutOrder;
+            StartCorner = Enum.StartCorner.TopLeft;
+        });
+    end
+
+    return setmetatable(cfg, library)
+end
         --
 
         function library:section(properties)
