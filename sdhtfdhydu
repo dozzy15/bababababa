@@ -3203,11 +3203,12 @@
             return setmetatable(cfg, library)
         end
 
-        --[[ FUNCIÓN BOTÓN ELIMINADA - SOLO TOGGLES PERMITIDOS
+        -- FUNCIÓN BOTÓN - AHORA FUNCIONA
         function library:button(options) 
             local cfg = {
-                name = options.name or "TextBox",
+                name = options.name or "Button",
                 callback = options.callback or function() end,
+                seperator = options.seperator or false,
                 items = {};
             }
             
@@ -3260,6 +3261,18 @@
                 }); library:apply_theme(items[ "name" ], "accent", "BackgroundColor3");                            
             end 
 
+            if cfg.seperator then
+                library:create( "Frame" , {
+                    AnchorPoint = vec2(0, 1);
+                    Parent = self.items[ "elements" ];
+                    Position = dim2(0, 0, 1, 0);
+                    BorderColor3 = rgb(0, 0, 0);
+                    Size = dim2(1, 1, 0, 1);
+                    BorderSizePixel = 0;
+                    BackgroundColor3 = rgb(36, 36, 37)
+                });
+            end
+
             items[ "button" ].MouseButton1Click:Connect(function()
                 cfg.callback()
 
@@ -3268,8 +3281,7 @@
             end)
             
             return setmetatable(cfg, library)
-        end 
-        --]]
+        end
 
         function library:settings(options)  
             local cfg = {
