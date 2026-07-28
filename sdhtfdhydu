@@ -1418,6 +1418,7 @@
                 default = options.default or false,
                 folding = options.folding or false, 
                 callback = options.callback or function() end,
+                order = options.order or 0,
 
                 items = {};
                 seperator = options.seperator or options.Seperator or false;
@@ -1438,7 +1439,8 @@
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
                     TextSize = 14;
-                    BackgroundColor3 = rgb(255, 255, 255)
+                    LayoutOrder = cfg.order;
+                    BackgroundColor3 = rgb(255, 255, 255)   
                 });
                 
                 items[ "name" ] = library:create( "TextLabel" , {
@@ -1609,7 +1611,8 @@
                 name = options.name or nil,
                 suffix = options.suffix or "",
                 flag = options.flag or library:next_flag(),
-                callback = options.callback or function() end, 
+                callback = options.callback or function() end,
+                order = options.order or 0, 
                 info = options.info or nil; 
 
                 -- value settings
@@ -1638,6 +1641,7 @@
                     Size = dim2(1, 0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
+                    LayoutOrder = cfg.order;
                     TextSize = 14;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
@@ -1838,6 +1842,7 @@
                 options = options.items or {""};
                 callback = options.callback or function() end;
                 multi = options.multi or false;
+                order = options.order or 0,
                 scrolling = options.scrolling or false;
 
                 width = options.width or 130;
@@ -2961,6 +2966,7 @@
                         Position = dim2(1, 0, 0, 0);
                         BorderSizePixel = 0;
                         AutomaticSize = Enum.AutomaticSize.X;
+                        LayoutOrder = cfg.order;
                         TextSize = 14;
                         BackgroundColor3 = rgb(33, 33, 35)
                     });
@@ -3208,6 +3214,7 @@
             local cfg = {
                 name = options.name or "Button",
                 callback = options.callback or function() end,
+                order = options.order or 0,
                 seperator = options.seperator or false,
                 items = {};
             }
@@ -3221,6 +3228,7 @@
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
+                    LayoutOrder = cfg.order;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
