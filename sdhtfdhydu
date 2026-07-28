@@ -1100,64 +1100,64 @@
         end 
 
         -- Miscellaneous 
-function library:column(properties) 
-    local cfg = {items = {}, size = properties.size or 1}
+            function library:column(properties) 
+                local cfg = {items = {}, size = properties.size or 1}
 
-    local items = cfg.items; do     
-        items[ "column" ] = library:create( "Frame" , {
-            Parent = self[ "parent" ] or self.items["tab_parent"];
-            BackgroundTransparency = 1;
-            Name = "\0";
-            BorderColor3 = rgb(0, 0, 0);
-            Size = dim2(1, 0, 1, 0);
-            BorderSizePixel = 0;
-            BackgroundColor3 = rgb(255, 255, 255)
-        });
+                local items = cfg.items; do     
+                    items[ "column" ] = library:create( "Frame" , {
+                        Parent = self[ "parent" ] or self.items["tab_parent"];
+                        BackgroundTransparency = 1;
+                        Name = "\0";
+                        BorderColor3 = rgb(0, 0, 0);
+                        Size = dim2(0, 0, cfg.size, 0);
+                        BorderSizePixel = 0;
+                        BackgroundColor3 = rgb(255, 255, 255)
+                    });
+                    
+                    library:create( "UIPadding" , {
+                        PaddingBottom = dim(0, 10);
+                        Parent = items[ "column" ]
+                    });
+                    
+                    library:create( "UIListLayout" , {
+                        Parent = items[ "column" ];
+                        HorizontalFlex = Enum.UIFlexAlignment.Fill;
+                        Padding = dim(0, 10);
+                        FillDirection = Enum.FillDirection.Vertical;
+                        SortOrder = Enum.SortOrder.LayoutOrder
+                    });
+                end 
 
-        library:create( "UIPadding" , {
-            PaddingBottom = dim(0, 10);
-            Parent = items[ "column" ]
-        });
-
-        library:create( "UIListLayout" , {
-            Parent = items[ "column" ];
-            HorizontalFlex = Enum.UIFlexAlignment.Fill;
-            Padding = dim(0, 10);
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder
-        });
-    end 
-
-    return setmetatable(cfg, library)
-end
+                return setmetatable(cfg, library)
+            end 
 
             function library:sub_tab(properties) 
-    local cfg = {items = {}, order = properties.order or 0; size = properties.size or 1}
+                local cfg = {items = {}, order = properties.order or 0; size = properties.size or 1}
 
-    local items = cfg.items; do 
-        items[ "tab_parent" ] = library:create( "Frame" , {
-            Parent = self.items[ "tab" ];
-            BackgroundTransparency = 1;
-            Name = "\0";
-            Size = dim2(1, 0, 1, 0);
-            BorderColor3 = rgb(0, 0, 0);
-            BorderSizePixel = 0;
-            Visible = true;
-            BackgroundColor3 = rgb(255, 255, 255)
-        });
+                local items = cfg.items; do 
+                    items[ "tab_parent" ] = library:create( "Frame" , {
+                        Parent = self.items[ "tab" ];
+                        BackgroundTransparency = 1;
+                        Name = "\0";
+                        Size = dim2(0,0,cfg.size,0);
+                        BorderColor3 = rgb(0, 0, 0);
+                        BorderSizePixel = 0;
+                        Visible = true;
+                        BackgroundColor3 = rgb(255, 255, 255)
+                    });
+                    
+                    library:create( "UIListLayout" , {
+                        FillDirection = Enum.FillDirection.Horizontal;
+                        HorizontalFlex = Enum.UIFlexAlignment.Fill;
+                        VerticalFlex = Enum.UIFlexAlignment.Fill;
+                        Parent = items[ "tab_parent" ];
+                        Padding = dim(0, 7);
+                        SortOrder = Enum.SortOrder.LayoutOrder;
+                    });
+                end
 
-        library:create( "UIGridLayout" , {
-            Parent = items[ "tab_parent" ];
-            CellSize = dim2(0.5, -5, 0, 0);
-            CellPadding = dim2(0, 7, 0, 7);
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            StartCorner = Enum.StartCorner.TopLeft;
-        });
-    end
-
-    return setmetatable(cfg, library)
-end
+                return setmetatable(cfg, library)
+            end 
         --
 
         function library:section(properties)
@@ -1418,7 +1418,6 @@ end
                 default = options.default or false,
                 folding = options.folding or false, 
                 callback = options.callback or function() end,
-                order = options.order or 0,
 
                 items = {};
                 seperator = options.seperator or options.Seperator or false;
@@ -1439,8 +1438,7 @@ end
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
                     TextSize = 14;
-                    LayoutOrder = cfg.order;
-                    BackgroundColor3 = rgb(255, 255, 255)   
+                    BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
                 items[ "name" ] = library:create( "TextLabel" , {
@@ -1611,8 +1609,7 @@ end
                 name = options.name or nil,
                 suffix = options.suffix or "",
                 flag = options.flag or library:next_flag(),
-                callback = options.callback or function() end,
-                order = options.order or 0, 
+                callback = options.callback or function() end, 
                 info = options.info or nil; 
 
                 -- value settings
@@ -1641,7 +1638,6 @@ end
                     Size = dim2(1, 0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
-                    LayoutOrder = cfg.order;
                     TextSize = 14;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
@@ -1842,7 +1838,6 @@ end
                 options = options.items or {""};
                 callback = options.callback or function() end;
                 multi = options.multi or false;
-                order = options.order or 0,
                 scrolling = options.scrolling or false;
 
                 width = options.width or 130;
@@ -2966,7 +2961,6 @@ end
                         Position = dim2(1, 0, 0, 0);
                         BorderSizePixel = 0;
                         AutomaticSize = Enum.AutomaticSize.X;
-                        LayoutOrder = cfg.order;
                         TextSize = 14;
                         BackgroundColor3 = rgb(33, 33, 35)
                     });
@@ -3209,13 +3203,11 @@ end
             return setmetatable(cfg, library)
         end
 
-        -- FUNCIÓN BOTÓN - AHORA FUNCIONA
+        --[[ FUNCIÓN BOTÓN ELIMINADA - SOLO TOGGLES PERMITIDOS
         function library:button(options) 
             local cfg = {
-                name = options.name or "Button",
+                name = options.name or "TextBox",
                 callback = options.callback or function() end,
-                order = options.order or 0,
-                seperator = options.seperator or false,
                 items = {};
             }
             
@@ -3228,7 +3220,6 @@ end
                     BorderColor3 = rgb(0, 0, 0);
                     BorderSizePixel = 0;
                     AutomaticSize = Enum.AutomaticSize.Y;
-                    LayoutOrder = cfg.order;
                     BackgroundColor3 = rgb(255, 255, 255)
                 });
                 
@@ -3269,18 +3260,6 @@ end
                 }); library:apply_theme(items[ "name" ], "accent", "BackgroundColor3");                            
             end 
 
-            if cfg.seperator then
-                library:create( "Frame" , {
-                    AnchorPoint = vec2(0, 1);
-                    Parent = self.items[ "elements" ];
-                    Position = dim2(0, 0, 1, 0);
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(1, 1, 0, 1);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(36, 36, 37)
-                });
-            end
-
             items[ "button" ].MouseButton1Click:Connect(function()
                 cfg.callback()
 
@@ -3289,7 +3268,8 @@ end
             end)
             
             return setmetatable(cfg, library)
-        end
+        end 
+        --]]
 
         function library:settings(options)  
             local cfg = {
