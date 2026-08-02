@@ -2155,6 +2155,485 @@
             return setmetatable(cfg, library)
         end
 
+function library:colorpicker(options) 
+    local cfg = {
+        name = options.name or "Color", 
+        flag = options.flag or library:next_flag(),
+
+        color = options.color or options.default or color(1, 1, 1),
+        alpha = options.alpha and 1 - options.alpha or 0,
+        
+        open = false, 
+        callback = options.callback or function() end,
+        items = {};
+
+        seperator = options.seperator or options.Seperator or false;
+    }
+
+    local dragging_sat = false 
+    local dragging_hue = false 
+    local dragging_alpha = false 
+
+    local h, s, v = cfg.color:ToHSV() 
+    local a = cfg.alpha 
+
+    flags[cfg.flag] = {Color = cfg.color, Transparency = cfg.alpha}
+
+    local label; 
+    if not self.items.right_components then 
+        label = self:label({name = cfg.name, seperator = cfg.seperator})
+    end
+
+    local items = cfg.items; do 
+        -- Component
+            items[ "colorpicker" ] = library:create( "TextButton" , {
+                FontFace = fonts.small;
+                TextColor3 = rgb(0, 0, 0);
+                BorderColor3 = rgb(0, 0, 0);
+                Text = "";
+                AutoButtonColor = false;
+                AnchorPoint = vec2(1, 0);
+                Parent = label and label.items.right_components or self.items[ "right_components" ];
+                Name = "\0";
+                Position = dim2(1, 0, 0, 0);
+                Size = dim2(0, 16, 0, 16);
+                BorderSizePixel = 0;
+                TextSize = 14;
+                BackgroundColor3 = cfg.color
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "colorpicker" ];
+                CornerRadius = dim(0, 4)
+            });
+            
+            items[ "colorpicker_inline" ] = library:create( "Frame" , {
+                Parent = items[ "colorpicker" ];
+                Size = dim2(1, -2, 1, -2);
+                Name = "\0";
+                BorderMode = Enum.BorderMode.Inset;
+                BorderColor3 = rgb(0, 0, 0);
+                Position = dim2(0, 1, 0, 1);
+                BorderSizePixel = 0;
+                BackgroundColor3 = cfg.color
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "colorpicker_inline" ];
+                CornerRadius = dim(0, 4)
+            });
+            
+            library:create( "UIGradient" , {
+                Color = rgbseq{rgbkey(0, rgb(211, 211, 211)), rgbkey(1, rgb(211, 211, 211))};
+                Parent = items[ "colorpicker_inline" ]
+            });         
+        --
+        
+        -- Colorpicker
+            items[ "colorpicker_holder" ] = library:create( "Frame" , {
+                Parent = library[ "other" ];
+                Name = "\0";
+                Position = dim2(0.20000000298023224, 20, 0.296999990940094, 0);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(0, 166, 0, 197);
+                BorderSizePixel = 0;
+                Visible = true;
+                BackgroundColor3 = rgb(25, 25, 29)
+            });
+
+            items[ "colorpicker_fade" ] = library:create( "Frame" , {
+                Parent = items[ "colorpicker_holder" ];
+                Name = "\0";
+                BackgroundTransparency = 0;
+                Position = dim2(0, 0, 0, 0);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, 0, 1, 0);
+                BorderSizePixel = 0;
+                ZIndex = 100;
+                BackgroundColor3 = rgb(25, 25, 29)
+            });
+            
+            items[ "colorpicker_components" ] = library:create( "Frame" , {
+                Parent = items[ "colorpicker_holder" ];
+                Name = "\0";
+                Position = dim2(0, 1, 0, 1);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, -2, 1, -2);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(22, 22, 24)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "colorpicker_components" ];
+                CornerRadius = dim(0, 6)
+            });
+            
+            items[ "saturation_holder" ] = library:create( "Frame" , {
+                Parent = items[ "colorpicker_components" ];
+                Name = "\0";
+                Position = dim2(0, 7, 0, 7);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, -14, 1, -80);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 39, 39)
+            });
+            
+            items[ "sat" ] = library:create( "TextButton" , {
+                Parent = items[ "saturation_holder" ];
+                Name = "\0";
+                Size = dim2(1, 0, 1, 0);
+                Text = "";
+                AutoButtonColor = false;
+                BorderColor3 = rgb(0, 0, 0);
+                ZIndex = 2;
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 255, 255)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "sat" ];
+                CornerRadius = dim(0, 4)
+            });
+            
+            library:create( "UIGradient" , {
+                Rotation = 270;
+                Transparency = numseq{numkey(0, 0), numkey(1, 1)};
+                Parent = items[ "sat" ];
+                Color = rgbseq{rgbkey(0, rgb(0, 0, 0)), rgbkey(1, rgb(0, 0, 0))}
+            });
+            
+            items[ "val" ] = library:create( "Frame" , {
+                Name = "\0";
+                Parent = items[ "saturation_holder" ];
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, 0, 1, 0);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 255, 255)
+            });
+            
+            library:create( "UIGradient" , {
+                Parent = items[ "val" ];
+                Transparency = numseq{numkey(0, 0), numkey(1, 1)}
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "val" ];
+                CornerRadius = dim(0, 4)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "saturation_holder" ];
+                CornerRadius = dim(0, 4)
+            });
+            
+            items[ "satvalpicker" ] = library:create( "TextButton" , {
+                BorderColor3 = rgb(0, 0, 0);
+                AutoButtonColor = false;
+                Text = "";
+                AnchorPoint = vec2(0, 1);
+                Parent = items[ "saturation_holder" ];
+                Name = "\0";
+                Position = dim2(0, 0, 4, 0);
+                Size = dim2(0, 8, 0, 8);
+                ZIndex = 5;
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 0, 0)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "satvalpicker" ];
+                CornerRadius = dim(0, 9999)
+            });
+            
+            library:create( "UIStroke" , {
+                Color = rgb(255, 255, 255);
+                Parent = items[ "satvalpicker" ];
+                ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+            });
+            
+            items[ "hue_gradient" ] = library:create( "TextButton" , {
+                Parent = items[ "colorpicker_components" ];
+                Name = "\0";
+                Position = dim2(0, 10, 1, -64);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, -20, 0, 8);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 255, 255);
+                AutoButtonColor = false;
+                Text = "";
+            });
+            
+            library:create( "UIGradient" , {
+                Color = rgbseq{rgbkey(0, rgb(255, 0, 0)), rgbkey(0.17, rgb(255, 255, 0)), rgbkey(0.33, rgb(0, 255, 0)), rgbkey(0.5, rgb(0, 255, 255)), rgbkey(0.67, rgb(0, 0, 255)), rgbkey(0.83, rgb(255, 0, 255)), rgbkey(1, rgb(255, 0, 0))};
+                Parent = items[ "hue_gradient" ]
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "hue_gradient" ];
+                CornerRadius = dim(0, 6)
+            });
+            
+            items[ "hue_picker" ] = library:create( "TextButton" , {
+                BorderColor3 = rgb(0, 0, 0);
+                AutoButtonColor = false;
+                Text = "";
+                AnchorPoint = vec2(0, 0.5);
+                Parent = items[ "hue_gradient" ];
+                Name = "\0";
+                Position = dim2(0, 0, 0.5, 0);
+                Size = dim2(0, 8, 0, 8);
+                ZIndex = 5;
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 0, 0)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "hue_picker" ];
+                CornerRadius = dim(0, 9999)
+            });
+            
+            library:create( "UIStroke" , {
+                Color = rgb(255, 255, 255);
+                Parent = items[ "hue_picker" ];
+                ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+            });
+            
+            items[ "alpha_gradient" ] = library:create( "TextButton" , {
+                Parent = items[ "colorpicker_components" ];
+                Name = "\0";
+                Position = dim2(0, 10, 1, -46);
+                BorderColor3 = rgb(0, 0, 0);
+                Size = dim2(1, -20, 0, 8);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(25, 25, 29);
+                AutoButtonColor = false;
+                Text = "";
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "alpha_gradient" ];
+                CornerRadius = dim(0, 6)
+            });
+            
+            items[ "alpha_picker" ] = library:create( "TextButton" , {
+                BorderColor3 = rgb(0, 0, 0);
+                AutoButtonColor = false;
+                Text = "";
+                AnchorPoint = vec2(0, 0.5);
+                Parent = items[ "alpha_gradient" ];
+                Name = "\0";
+                Position = dim2(1, 0, 0.5, 0);
+                Size = dim2(0, 8, 0, 8);
+                ZIndex = 5;
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(255, 0, 0)
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "alpha_picker" ];
+                CornerRadius = dim(0, 9999)
+            });
+            
+            library:create( "UIStroke" , {
+                Color = rgb(255, 255, 255);
+                ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+                Parent = items[ "alpha_picker" ]
+            });
+            
+            library:create( "UIGradient" , {
+                Color = rgbseq{rgbkey(0, rgb(0, 0, 0)), rgbkey(1, rgb(255, 255, 255))};
+                Parent = items[ "alpha_gradient" ]
+            });
+            
+            items[ "alpha_indicator" ] = library:create( "ImageLabel" , {
+                ScaleType = Enum.ScaleType.Tile;
+                BorderColor3 = rgb(0, 0, 0);
+                Parent = items[ "alpha_gradient" ];
+                Image = "rbxassetid://18274452449";
+                BackgroundTransparency = 1;
+                Name = "\0";
+                Size = dim2(1, 0, 1, 0);
+                TileSize = dim2(0, 6, 0, 6);
+                BorderSizePixel = 0;
+                BackgroundColor3 = rgb(0, 0, 0)
+            });
+            
+            library:create( "UIGradient" , {
+                Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, rgb(255, 0, 0))};
+                Transparency = numseq{numkey(0, 0.8062499761581421), numkey(1, 0)};
+                Parent = items[ "alpha_indicator" ]
+            });
+            
+            library:create( "UICorner" , {
+                Parent = items[ "alpha_indicator" ];
+                CornerRadius = dim(0, 6)
+            });
+            
+            library:create( "UIGradient" , {
+                Rotation = 90;
+                Parent = items[ "colorpicker_components" ];
+                Color = rgbseq{rgbkey(0, rgb(255, 255, 255)), rgbkey(1, rgb(66, 66, 66))}
+            });
+
+            items[ "input" ] = library:create( "TextBox" , {
+                FontFace = fonts.font;
+                AnchorPoint = vec2(1, 1);
+                Text = "";
+                Parent = items[ "colorpicker_components" ];
+                Name = "\0";
+                TextTruncate = Enum.TextTruncate.AtEnd;
+                BorderSizePixel = 0;
+                PlaceholderColor3 = rgb(255, 255, 255);
+                CursorPosition = -1;
+                ClearTextOnFocus = false;
+                TextSize = 14;
+                BackgroundColor3 = rgb(255, 255, 255);
+                TextColor3 = rgb(72, 72, 72);
+                BorderColor3 = rgb(0, 0, 0);
+                Position = dim2(1, -8, 1, -11);
+                Size = dim2(1, -16, 0, 18);
+                BackgroundColor3 = rgb(33, 33, 35)
+            }); 
+            
+            library:create( "UICorner" , {
+                Parent = items[ "input" ];
+                CornerRadius = dim(0, 3)
+            });
+            
+            items[ "UICorenr" ] = library:create( "UICorner" , {
+                Parent = items[ "colorpicker_holder" ];
+                Name = "\0";
+                CornerRadius = dim(0, 4)
+            });
+        --                  
+    end;
+
+    function cfg.set_visible(bool)
+        items[ "colorpicker_fade" ].BackgroundTransparency = 0
+        items[ "colorpicker_holder" ].Parent = bool and library[ "items" ] or library[ "other" ]
+        items[ "colorpicker_holder" ].Position = dim_offset(items[ "colorpicker" ].AbsolutePosition.X, items[ "colorpicker" ].AbsolutePosition.Y + items[ "colorpicker" ].AbsoluteSize.Y + 45)
+
+        library:tween(items[ "colorpicker_fade" ], {BackgroundTransparency = 1}, Enum.EasingStyle.Quad, 0.4)
+        library:tween(items[ "colorpicker_holder" ], {Position = items[ "colorpicker_holder" ].Position + dim_offset(0, 20)})
+        
+        if not (self.sanity and library.current_open == self and self.open) then 
+            library:close_element(cfg)
+        end
+    end
+
+    function cfg.set(color, alpha)
+        if type(color) == "boolean" then 
+            return
+        end 
+
+        if color then 
+            h, s, v = color:ToHSV()
+        end
+        
+        if alpha then 
+            a = alpha
+        end 
+        
+        local Color = hsv(h, s, v)
+
+        library:tween(items[ "hue_picker" ], {Position = dim2(0, (items[ "hue_gradient" ].AbsoluteSize.X - items[ "hue_picker" ].AbsoluteSize.X) * h, 0.5, 0)}, Enum.EasingStyle.Linear, 0.05)
+        library:tween(items[ "alpha_picker" ], {Position = dim2(0, (items[ "alpha_gradient" ].AbsoluteSize.X - items[ "alpha_picker" ].AbsoluteSize.X) * (1 - a), 0.5, 0)}, Enum.EasingStyle.Linear, 0.05)
+        library:tween(items[ "satvalpicker" ], {Position = dim2(0, s * (items[ "saturation_holder" ].AbsoluteSize.X - items[ "satvalpicker" ].AbsoluteSize.X), 1, 1 - v * (items[ "saturation_holder" ].AbsoluteSize.Y - items[ "satvalpicker" ].AbsoluteSize.Y))}, Enum.EasingStyle.Linear, 0.05)
+
+        items[ "alpha_indicator" ]:FindFirstChildOfClass("UIGradient").Color = rgbseq{rgbkey(0, rgb(112, 112, 112)), rgbkey(1, hsv(h, 1, 1))};
+        
+        items[ "colorpicker" ].BackgroundColor3 = Color
+        items[ "colorpicker_inline" ].BackgroundColor3 = Color
+        items[ "saturation_holder" ].BackgroundColor3 = hsv(h, 1, 1)
+
+        items[ "hue_picker" ].BackgroundColor3 = hsv(h, 1, 1)
+        items[ "alpha_picker" ].BackgroundColor3 = hsv(h, 1, 1 - a)
+        items[ "satvalpicker" ].BackgroundColor3 = hsv(h, s, v)
+
+        flags[cfg.flag] = {
+            Color = Color;
+            Transparency = a 
+        }
+        
+        local color = items[ "colorpicker" ].BackgroundColor3
+        items[ "input" ].Text = string.format("%s, %s, %s, ", library:round(color.R * 255), library:round(color.G * 255), library:round(color.B * 255))
+        items[ "input" ].Text ..= library:round(1 - a, 0.01)
+        
+        cfg.callback(Color, a)
+    end
+    
+    function cfg.update_color() 
+        local mouse = uis:GetMouseLocation() 
+        local offset = vec2(mouse.X, mouse.Y - gui_offset) 
+
+        if dragging_sat then	
+            s = math.clamp((offset - items["sat"].AbsolutePosition).X / items["sat"].AbsoluteSize.X, 0, 1)
+            v = 1 - math.clamp((offset - items["sat"].AbsolutePosition).Y / items["sat"].AbsoluteSize.Y, 0, 1)
+        elseif dragging_hue then
+            h = math.clamp((offset - items[ "hue_gradient" ].AbsolutePosition).X / items[ "hue_gradient" ].AbsoluteSize.X, 0, 1)
+        elseif dragging_alpha then
+            a = 1 - math.clamp((offset - items[ "alpha_gradient" ].AbsolutePosition).X / items[ "alpha_gradient" ].AbsoluteSize.X, 0, 1)
+        end
+
+        cfg.set()
+    end
+
+    items[ "colorpicker" ].MouseButton1Click:Connect(function()
+        cfg.open = not cfg.open 
+
+        cfg.set_visible(cfg.open)            
+    end)
+
+    uis.InputChanged:Connect(function(input)
+        if (dragging_sat or dragging_hue or dragging_alpha) and input.UserInputType == Enum.UserInputType.MouseMovement then
+            cfg.update_color() 
+        end
+    end)
+
+    library:connection(uis.InputEnded, function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging_sat = false
+            dragging_hue = false
+            dragging_alpha = false
+        end
+    end)    
+
+    items[ "alpha_gradient" ].MouseButton1Down:Connect(function()
+        dragging_alpha = true 
+    end)
+    
+    items[ "hue_gradient" ].MouseButton1Down:Connect(function()
+        dragging_hue = true 
+    end)
+    
+    items[ "sat" ].MouseButton1Down:Connect(function()
+        dragging_sat = true  
+    end)
+
+    items[ "input" ].FocusLost:Connect(function()
+        local text = items[ "input" ].Text
+        local r, g, b, a = library:convert(text)
+        
+        if r and g and b and a then 
+            cfg.set(rgb(r, g, b), 1 - a)
+        end 
+    end)
+
+    items[ "input" ].Focused:Connect(function()
+        library:tween(items[ "input" ], {TextColor3 = rgb(245, 245, 245)})
+    end)
+
+    items[ "input" ].FocusLost:Connect(function()
+        library:tween(items[ "input" ], {TextColor3 = rgb(72, 72, 72)})
+    end)
+    
+    -- Aplicar color inicial
+    cfg.set(cfg.color, cfg.alpha)
+    config_flags[cfg.flag] = cfg.set
+
+    return setmetatable(cfg, library)
+end
+
         function library:label(options)
             local cfg = {
                 enabled = options.enabled or nil,
@@ -3203,11 +3682,12 @@
             return setmetatable(cfg, library)
         end
 
-        --[[ FUNCIÓN BOTÓN ELIMINADA - SOLO TOGGLES PERMITIDOS
+        -- FUNCIÓN BOTÓN - AHORA FUNCIONA
         function library:button(options) 
             local cfg = {
-                name = options.name or "TextBox",
+                name = options.name or "Button",
                 callback = options.callback or function() end,
+                seperator = options.seperator or false,
                 items = {};
             }
             
@@ -3260,6 +3740,18 @@
                 }); library:apply_theme(items[ "name" ], "accent", "BackgroundColor3");                            
             end 
 
+            if cfg.seperator then
+                library:create( "Frame" , {
+                    AnchorPoint = vec2(0, 1);
+                    Parent = self.items[ "elements" ];
+                    Position = dim2(0, 0, 1, 0);
+                    BorderColor3 = rgb(0, 0, 0);
+                    Size = dim2(1, 1, 0, 1);
+                    BorderSizePixel = 0;
+                    BackgroundColor3 = rgb(36, 36, 37)
+                });
+            end
+
             items[ "button" ].MouseButton1Click:Connect(function()
                 cfg.callback()
 
@@ -3268,8 +3760,7 @@
             end)
             
             return setmetatable(cfg, library)
-        end 
-        --]]
+        end
 
         function library:settings(options)  
             local cfg = {
