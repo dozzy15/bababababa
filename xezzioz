@@ -40,7 +40,7 @@ getgenv().Loaded = true
 
     local themes = {
         preset = {
-            accent = rgb(204, 197, 8),
+            accent = rgb(220, 0, 0),
             window_outline = rgb(0, 0, 0),
             inline = rgb(25, 27, 27),
             background = rgb(17, 19, 19),
@@ -1033,8 +1033,8 @@ getgenv().Loaded = true
     -- Library element functions
         function Library:Window(properties)
             local Cfg = {
-                Prefix = properties.Prefix or "Trap";
-                Suffix = properties.Suffix or "Goose";
+                Prefix = properties.Prefix or "Null";
+                Suffix = properties.Suffix or "Core";
                 Size = properties.Size or dim2(0, 620, 0, 471);
                 TabInfo;
                 Items = {};
