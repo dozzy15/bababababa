@@ -26,7 +26,7 @@ getgenv().Loaded = true
 
 -- Library init
     getgenv().Library = {
-        Directory = "xezios",
+        Directory = "Trapg",
         Folders = {
             "/fonts",
             "/configs",
@@ -40,7 +40,7 @@ getgenv().Loaded = true
 
     local themes = {
         preset = {
-            accent = rgb(108, 109, 152),
+            accent = rgb(204, 197, 8),
             window_outline = rgb(0, 0, 0),
             inline = rgb(25, 27, 27),
             background = rgb(17, 19, 19),
