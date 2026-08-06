@@ -2473,7 +2473,7 @@ end
                     Name = "\0";
                     Active = false;
                     BorderColor3 = rgb(0, 0, 0);
-                    Text = "hello theree!!";
+                    Text = "Write here...";
                     Size = dim2(1, 0, 1, 0);
                     Selectable = false;
                     Position = dim2(0, 3, 0, 0);
