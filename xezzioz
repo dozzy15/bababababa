@@ -1034,7 +1034,7 @@ getgenv().Loaded = true
         function Library:Window(properties)
             local Cfg = {
                 Prefix = properties.Prefix or "Trap";
-                Suffix = properties.Suffix or "gzz";
+                Suffix = properties.Suffix or "Goose";
                 Size = properties.Size or dim2(0, 620, 0, 471);
                 TabInfo;
                 Items = {};
