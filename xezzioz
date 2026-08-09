@@ -1991,6 +1991,14 @@ function Library:Dropdown(properties)
         end
     end)
 
+    function Cfg:SetOptions(newOptions)
+        if not self.Items then return end
+        self.Items.Options = newOptions or {}
+        if self.RefreshOptions then
+            self:RefreshOptions(newOptions)
+        end
+    end
+
     return setmetatable(Cfg, Library)
 end
 
