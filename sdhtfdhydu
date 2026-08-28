@@ -7,9 +7,11 @@ getgenv().Loaded = true
 
 -- Variables 
     -- Services
-    local InputService, HttpService, GuiService, RunService, Stats, CoreGui, TweenService, SoundService, Workspace, Players = game:GetService("UserInputService"), game:GetService("HttpService"), game:GetService("GuiService"), game:GetService("RunService"), game:GetService("Stats"), game:GetService("CoreGui"), game:GetService("TweenService"), game:GetService("SoundService"), game:GetService("Workspace"), game:GetService("Players")
-    local Camera, lp, gui_offset = Workspace.CurrentCamera, Players.LocalPlayer, GuiService:GetGuiInset().Y
-    local mouse = lp:GetMouse()
+local InputService, HttpService, GuiService, RunService, Stats, CoreGui, TweenService, SoundService, Workspace, Players = game:GetService("UserInputService"), game:GetService("HttpService"), game:GetService("GuiService"), game:GetService("RunService"), game:GetService("Stats"), game:GetService("CoreGui"), game:GetService("TweenService"), game:GetService("SoundService"), game:GetService("Workspace"), game:GetService("Players")
+local Camera, lp, gui_offset = Workspace.CurrentCamera, Players.LocalPlayer, GuiService:GetGuiInset().Y
+local mouse = lp:GetMouse()
+
+local isMobile = InputService.TouchEnabled
 
     -- Data types
     local vec2, vec3, dim2, dim, rect, dim_offset = Vector2.new, Vector3.new, UDim2.new, UDim.new, Rect.new, UDim2.fromOffset
@@ -19,19 +21,18 @@ getgenv().Loaded = true
 -- 
 
 -- Library init
-getgenv().Library = {
-    Directory = "Null",
-    Folders = {
-        "/fonts",
-        "/configs",
-    },
-    Flags = {},
-    ConfigFlags = {},
-    Connections = {},   
-    Notifications = {Notifs = {}},
-    OpenElement = {},
-    ToggleKey = Enum.KeyCode.Insert
-};
+    getgenv().Library = {
+        Directory = "Trapg",
+        Folders = {
+            "/fonts",
+            "/configs",
+        },
+        Flags = {},
+        ConfigFlags = {},
+        Connections = {},   
+        Notifications = {Notifs = {}},
+        OpenElement = {}; -- type: table or userdata
+    }
 
     local themes = {
         preset = {
@@ -1026,22 +1027,14 @@ getgenv().Library = {
     --
     
     -- Library element functions
-        function Library:Window(properties)
-            local Cfg = {
-                Prefix = properties.Prefix or "Null";
-                Suffix = properties.Suffix or "Core";
-                Size = properties.Size or (function()
-    local viewportSize = Camera.ViewportSize
-    local isPhone = viewportSize.X < 500
-    if isPhone then
-        return dim2(0, viewportSize.X * 0.95, 0, viewportSize.Y * 0.9)
-    else
-        return dim2(0, 620, 0, 471)
-    end
-end)();
-                TabInfo;
-                Items = {};
-            }
+function Library:Window(properties)
+    local Cfg = {
+        Prefix = properties.Prefix or "Null";
+        Suffix = properties.Suffix or "Core";
+        Size = isMobile and dim2(0, 380, 0, 420) or (properties.Size or dim2(0, 620, 0, 471));
+        TabInfo;
+        Items = {};
+    }
             
             Library.Items = Library:Create( "ScreenGui" , {
                 Parent = CoreGui;
@@ -1161,45 +1154,23 @@ end)();
                     BackgroundColor3 = themes.preset.inline
                 });	Library:Themify(Items.Filler, "inline", "BackgroundColor3")
                 
-Items.SectionTitle = Library:Create( "TextLabel" , {
-    RichText = true;
-    Parent = Items.TitleHolder;
-    TextColor3 = themes.preset.accent;
-    BorderColor3 = rgb(0, 0, 0);
-    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
-    Name = "\0";
-    AutomaticSize = Enum.AutomaticSize.XY;
-    AnchorPoint = vec2(0, 0.5);
-    BorderSizePixel = 0;
-    BackgroundTransparency = 1;
-    Position = dim2(0, 0, 0.5, 0);
-    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-    ZIndex = 2;
-    TextSize = 20;
-    BackgroundColor3 = rgb(255, 255, 255)
-}); Library:Themify(Items.SectionTitle, "accent", "TextColor3")
-
-Items.ToggleButton = Library:Create("TextButton", {
-    Parent = Items.TitleHolder;
-    Text = "▼";
-    Size = dim2(0, 30, 0, 30);
-    Position = dim2(1, -35, 0.5, -15);
-    BackgroundColor3 = themes.preset.inline;
-    TextColor3 = themes.preset.text_color;
-    BorderSizePixel = 0;
-    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-    TextSize = 18;
-    AutoButtonColor = false;
-    Active = false;
-});
-Library:Themify(Items.ToggleButton, "inline", "BackgroundColor3");
-Library:Themify(Items.ToggleButton, "text_color", "TextColor3");
-
-Items.ToggleButton.MouseButton1Click:Connect(function()
-    local isVisible = Items.Window.Visible
-    Cfg.ToggleMenu(not isVisible)
-    Items.ToggleButton.Text = isVisible and "▲" or "▼"
-end);
+                Items.SectionTitle = Library:Create( "TextLabel" , {
+                    RichText = true;
+                    Parent = Items.TitleHolder;
+                    TextColor3 = themes.preset.accent;
+                    BorderColor3 = rgb(0, 0, 0);
+                    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
+                    Name = "\0";
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    AnchorPoint = vec2(0, 0.5);
+                    BorderSizePixel = 0;
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 0, 0.5, 0);
+                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+                    ZIndex = 2;
+                    TextSize = 20;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                }); Library:Themify(Items.SectionTitle, "accent", "TextColor3")
                 
                 Library:Create( "UIPadding" , {
                     Parent = Items.SectionTitle;
@@ -1249,16 +1220,40 @@ end);
 do -- Other
     Library:Draggify(Items.Window)
     Library:Resizify(Items.Window)
+end
+
+if isMobile then
+    local ToggleButton = Library:Create("TextButton", {
+        Parent = Library.Items;
+        Name = "MobileToggle";
+        Text = "Toggle UI";
+        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+        TextSize = 14;
+        TextColor3 = rgb(255, 255, 255);
+        BackgroundColor3 = themes.preset.accent;
+        BorderSizePixel = 0;
+        Size = dim2(0, 110, 0, 36);
+        Position = dim2(1, -125, 0, 20);
+        AutoButtonColor = false;
+        ZIndex = 999;
+    })
     
-    Library:Connection(InputService.InputBegan, function(input, game_event)
-        if input.KeyCode == Library.ToggleKey then
-            local isVisible = Items.Window.Visible
-            Cfg.ToggleMenu(not isVisible)
-        end
+    Library:Create("UICorner", {
+        Parent = ToggleButton;
+        CornerRadius = dim(0, 8)
+    })
+    
+    Library:Draggify(ToggleButton)
+    
+    local UIVisible = true
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        UIVisible = not UIVisible
+        Cfg.ToggleMenu(UIVisible)
     end)
 end
 
-            function Cfg.ToggleMenu(bool) 
+function Cfg.ToggleMenu(bool) 
                 if Cfg.Tweening then 
                     return 
                 end 
@@ -3215,149 +3210,157 @@ end
             return setmetatable(Cfg, Library)
         end
 
-function Library:Configs(window) 
-    local Text;
-    local Tab = window:Tab({Name = "Settings"})
+        function Library:Configs(window) 
+            local Text;
+            local Tab = window:Tab({Name = "Settings"})
 
-    local Section = Tab:Section({Name = "Main", Side = "Left"})
-    ConfigHolder = Section:Dropdown({Name = "Configs", Options = {"Report", "This", "Error", "To", "Finobe"}, Callback = function(option) if Text then Text.Set(option) end end, Flag = "config_Name_list"}); Library:UpdateConfigList()
-    Section:Textbox({Name = "Config Name:", Flag = "config_Name_text", default = ""})
-    Section:Button({Name = "Save", Callback = function() if Flags["config_Name_text"] == "" then return end writefile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg", Library:GetConfig()) Library:UpdateConfigList() Notifications:Create({Name = "Saved Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
-    Section:Button({Name = "Load", Callback = function() if Flags["config_Name_text"] == "" then return end Library:LoadConfig(readfile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg")) Library:UpdateConfigList() Notifications:Create({Name = "Loaded Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
-    Section:Button({Name = "Delete", Callback = function() if Flags["config_Name_text"] == "" then return end delfile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg") Library:UpdateConfigList() Notifications:Create({Name = "Deleted Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
+            local Section = Tab:Section({Name = "Main", Side = "Left"})
+            ConfigHolder = Section:Dropdown({Name = "Configs", Options = {"Report", "This", "Error", "To", "Finobe"}, Callback = function(option) if Text then Text.Set(option) end end, Flag = "config_Name_list"}); Library:UpdateConfigList()
+            Section:Textbox({Name = "Config Name:", Flag = "config_Name_text", default = ""})
+            Section:Button({Name = "Save", Callback = function() if Flags["config_Name_text"] == "" then return end writefile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg", Library:GetConfig()) Library:UpdateConfigList() Notifications:Create({Name = "Saved Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
+            Section:Button({Name = "Load", Callback = function() if Flags["config_Name_text"] == "" then return end Library:LoadConfig(readfile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg")) Library:UpdateConfigList() Notifications:Create({Name = "Loaded Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
+            Section:Button({Name = "Delete", Callback = function() if Flags["config_Name_text"] == "" then return end delfile(Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg") Library:UpdateConfigList() Notifications:Create({Name = "Deleted Config (" ..  Library.Directory .. "/configs/" .. Flags["config_Name_text"] .. ".cfg" .. ")"}) end})
 
-    local Section = Tab:Section({Name = "Other", Side = "Right"})
-    Section:Label({Name = "Accent Color"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("accent", color) end, Color = themes.preset.accent})
-    Section:Label({Name = "Window Outline"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("window_outline", color) end, Color = themes.preset.window_outline})
-    Section:Label({Name = "Inline Elements"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("inline", color) end, Color = themes.preset.inline})
-    Section:Label({Name = "Main Background"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("background", color) end, Color = themes.preset.background})
-    Section:Label({Name = "Visible Backgrounds"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("visible_backgrounds", color) end, Color = themes.preset.visible_backgrounds})
-    Section:Label({Name = "Text Color"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("text_color", color) end, Color = themes.preset.text_color})
-    Section:Label({Name = "Glow Effect"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("glow", color) end, Color = themes.preset.glow})
-    Section:Label({Name = "Deselected Elements"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("deselected", color) end, Color = themes.preset.deselected})
+            local Section = Tab:Section({Name = "Other", Side = "Right"})
+            Section:Label({Name = "Accent Color"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("accent", color) end, Color = themes.preset.accent})
+            Section:Label({Name = "Window Outline"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("window_outline", color) end, Color = themes.preset.window_outline})
+            Section:Label({Name = "Inline Elements"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("inline", color) end, Color = themes.preset.inline})
+            Section:Label({Name = "Main Background"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("background", color) end, Color = themes.preset.background})
+            Section:Label({Name = "Visible Backgrounds"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("visible_backgrounds", color) end, Color = themes.preset.visible_backgrounds})
+            Section:Label({Name = "Text Color"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("text_color", color) end, Color = themes.preset.text_color})
+            Section:Label({Name = "Glow Effect"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("glow", color) end, Color = themes.preset.glow})
+            Section:Label({Name = "Deselected Elements"}):Colorpicker({Callback = function(color, alpha) Library:RefreshTheme("deselected", color) end, Color = themes.preset.deselected})
 
-    window.Tweening = true
-    Section:Label({Name = "Menu Bind"}):Keybind({Name = "Menu Bind", Callback = function(bool) 
-        if window.Tweening then
-            return 
-        end 
-        window.ToggleMenu(bool) 
-    end, Default = true})
+            window.Tweening = true
+            Section:Label({Name = "Menu Bind"}):Keybind({Name = "Menu Bind", Callback = function(bool) 
+                if window.Tweening then
+                    return 
+                end 
 
-    delay(2, function() window.Tweening = false end)
-end
+                window.ToggleMenu(bool) 
+            end, Default = true})
 
-function Notifications:RefreshNotifications() 
-    local offset = 50
-    for i, v in Notifications.Notifs do
-        local Position = vec2(20, offset)
-        Library:Tween(v, {Position = dim_offset(Position.X, Position.Y)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-        offset += (v.AbsoluteSize.Y + 10)
-    end
-    return offset
-end
-
-function Notifications:FadeNotifs(path, is_fading)
-    local fading = is_fading and 1 or 0 
-    Library:Tween(path, {BackgroundTransparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-    for _, instance in path:GetDescendants() do 
-        if not instance:IsA("GuiObject") then 
-            if instance:IsA("UIStroke") then
-                Library:Tween(instance, {Transparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-            end
-            continue
-        end 
-        if instance:IsA("TextLabel") then
-            Library:Tween(instance, {TextTransparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-        elseif instance:IsA("Frame") then
-            Library:Tween(instance, {BackgroundTransparency = instance.Transparency and 0.6 and is_fading and 1 or 0.6}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+            delay(2, function() window.Tweening = false end)
         end
-    end
-end 
+    --
 
-function Notifications:Create(properties)
-    local Cfg = {
-        Name = properties.Name or "This is a title!";
-        Lifetime = properties.LifeTime or 3;
-        Items = {};
-        outline;
-    }
+    -- Notification Library
+        function Notifications:RefreshNotifications() 
+            local offset = 50
+            
+            for i, v in Notifications.Notifs do
+                local Position = vec2(20, offset)
+                Library:Tween(v, {Position = dim_offset(Position.X, Position.Y)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+                offset += (v.AbsoluteSize.Y + 10)
+            end
 
-    local Items = Cfg.Items; do 
-        Items.Outline = Library:Create( "Frame" , {
-            Parent = Library.Items;
-            Name = "\0";
-            Position = dim2(0, 100, 0, 10);
-            BorderColor3 = rgb(0, 0, 0);
-            BorderSizePixel = 0;
-            AutomaticSize = Enum.AutomaticSize.XY;
-            BackgroundColor3 = themes.preset.inline
-        }); Library:Themify(Items.Outline, "inline", "BackgroundColor3")
+            return offset
+        end
         
-        Items.Inline = Library:Create( "Frame" , {
-            Parent = Items.Outline;
-            Name = "\0";
-            Position = dim2(0, 1, 0, 1);
-            BorderColor3 = rgb(0, 0, 0);
-            Size = dim2(1, -2, 1, -2);
-            BorderSizePixel = 0;
-            BackgroundColor3 = themes.preset.visible_backgrounds
-        }); Library:Themify(Items.Inline, "visible_backgrounds", "BackgroundColor3")
-        
-        Library:Create( "UICorner" , {
-            Parent = Items.Inline
-        });
-        
-        Items.Name = Library:Create( "TextLabel" , {
-            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-            TextColor3 = themes.preset.text_color;
-            BorderColor3 = rgb(0, 0, 0);
-            Text = Cfg.Name;
-            Parent = Items.Inline;
-            Name = "\0";
-            AutomaticSize = Enum.AutomaticSize.XY;
-            BackgroundTransparency = 1;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            BorderSizePixel = 0;
-            ZIndex = 2;
-            TextSize = 14;
-            BackgroundColor3 = rgb(255, 255, 255)
-        }); Library:Themify(Items.Name, "text_color", "BackgroundColor3")
-        
-        Library:Create( "UIPadding" , {
-            PaddingTop = dim(0, 5);
-            PaddingBottom = dim(0, 5);
-            Parent = Items.Name;
-            PaddingRight = dim(0, 5);
-            PaddingLeft = dim(0, 5)
-        });
-        
-        Library:Create( "UICorner" , {
-            Parent = Items.Outline
-        });                       
-    end 
-    
-    local index = #Notifications.Notifs + 1
-    Notifications.Notifs[index] = Items.Outline
-    
-    local offset = Notifications:RefreshNotifications()
-    Items.Outline.Position = dim_offset(20, offset)
-    Library:Tween(Items.Outline, {AnchorPoint = vec2(0, 0)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-    task.spawn(function()
-        task.wait(Cfg.Lifetime)
-        Notifications.Notifs[index] = nil
-        Notifications:FadeNotifs(Items.Outline, true)
-        Library:Tween(Items.Outline, {AnchorPoint = vec2(1, 0)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
-        task.wait(1)
-        Items.Outline:Destroy() 
-    end)
-end
+        function Notifications:FadeNotifs(path, is_fading)
+            local fading = is_fading and 1 or 0 
+            
+            Library:Tween(path, {BackgroundTransparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
 
-local Window = Library:Window({
-    Prefix = "Null",
-    Suffix = "Core"
-})
+            for _, instance in path:GetDescendants() do 
+                if not instance:IsA("GuiObject") then 
+                    if instance:IsA("UIStroke") then
+                        Library:Tween(instance, {Transparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+                    end
+        
+                    continue
+                end 
+        
+                if instance:IsA("TextLabel") then
+                    Library:Tween(instance, {TextTransparency = fading}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+                elseif instance:IsA("Frame") then
+                    Library:Tween(instance, {BackgroundTransparency = instance.Transparency and 0.6 and is_fading and 1 or 0.6}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+                end
+            end
+        end 
+        
+        function Notifications:Create(properties)
+            local Cfg = {
+                Name = properties.Name or "This is a title!";
+                Lifetime = properties.LifeTime or 3;
+                
+                Items = {};
+                outline;
+            }
 
-Library:Configs(Window)
+            local Items = Cfg.Items; do 
+                Items.Outline = Library:Create( "Frame" , {
+                    Parent = Library.Items;
+                    Name = "\0";
+                    Position = dim2(0, 100, 0, 10);
+                    BorderColor3 = rgb(0, 0, 0);
+                    BorderSizePixel = 0;
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    BackgroundColor3 = themes.preset.inline
+                });	Library:Themify(Items.Outline, "inline", "BackgroundColor3")
+                
+                Items.Inline = Library:Create( "Frame" , {
+                    Parent = Items.Outline;
+                    Name = "\0";
+                    Position = dim2(0, 1, 0, 1);
+                    BorderColor3 = rgb(0, 0, 0);
+                    Size = dim2(1, -2, 1, -2);
+                    BorderSizePixel = 0;
+                    BackgroundColor3 = themes.preset.visible_backgrounds
+                });	Library:Themify(Items.Inline, "visible_backgrounds", "BackgroundColor3")
+                
+                Library:Create( "UICorner" , {
+                    Parent = Items.Inline
+                });
+                
+                Items.Name = Library:Create( "TextLabel" , {
+                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                    TextColor3 = themes.preset.text_color;
+                    BorderColor3 = rgb(0, 0, 0);
+                    Text = Cfg.Name;
+                    Parent = Items.Inline;
+                    Name = "\0";
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    BackgroundTransparency = 1;
+                    TextXAlignment = Enum.TextXAlignment.Left;
+                    BorderSizePixel = 0;
+                    ZIndex = 2;
+                    TextSize = 14;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                });	Library:Themify(Items.Name, "text_color", "BackgroundColor3")
+                
+                Library:Create( "UIPadding" , {
+                    PaddingTop = dim(0, 5);
+                    PaddingBottom = dim(0, 5);
+                    Parent = Items.Name;
+                    PaddingRight = dim(0, 5);
+                    PaddingLeft = dim(0, 5)
+                });
+                
+                Library:Create( "UICorner" , {
+                    Parent = Items.Outline
+                });                       
+            end 
+            
+            local index = #Notifications.Notifs + 1
+            Notifications.Notifs[index] = Items.Outline
+            
+            local offset = Notifications:RefreshNotifications()
+
+            Items.Outline.Position = dim_offset(20, offset)
+
+            Library:Tween(Items.Outline, {AnchorPoint = vec2(0, 0)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+
+            task.spawn(function()
+                task.wait(Cfg.Lifetime)
+                Notifications.Notifs[index] = nil
+                Notifications:FadeNotifs(Items.Outline, true)
+                Library:Tween(Items.Outline, {AnchorPoint = vec2(1, 0)}, TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out))
+                task.wait(1)
+                Items.Outline:Destroy() 
+            end)
+        end
+    --
+-- 
 
 return Library
