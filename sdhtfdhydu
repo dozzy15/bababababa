@@ -236,49 +236,49 @@ local isMobile = InputService.TouchEnabled
             end 
         end  
 
-        function Library:Draggify(Parent)
-            local Dragging = false 
-            local IntialSize = Parent.Position
-            local InitialPosition 
+function Library:Draggify(Parent)
+    local Dragging = false 
+    local IntialSize = Parent.Position
+    local InitialPosition 
 
-            Parent.InputBegan:Connect(function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    Dragging = true
-                    InitialPosition = Input.Position
-                    InitialSize = Parent.Position
-                end
-            end)
+    Parent.InputBegan:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+            InitialPosition = Input.Position
+            InitialSize = Parent.Position
+        end
+    end)
 
-            Parent.InputEnded:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    Dragging = false
-                end
-            end)
+    Parent.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = false
+        end
+    end)
 
-            Library:Connection(InputService.InputChanged, function(Input, game_event) 
-                if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then
-                    local Horizontal = Camera.ViewportSize.X
-                    local Vertical = Camera.ViewportSize.Y
+    Library:Connection(InputService.InputChanged, function(Input, game_event) 
+        if Dragging and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+            local Horizontal = Camera.ViewportSize.X
+            local Vertical = Camera.ViewportSize.Y
 
-                    local NewPosition = dim2(
-                        0,
-                        math.clamp(
-                            InitialSize.X.Offset + (Input.Position.X - InitialPosition.X),
-                            0,
-                            Horizontal - Parent.Size.X.Offset
-                        ),
-                        0,
-                        math.clamp(
-                            InitialSize.Y.Offset + (Input.Position.Y - InitialPosition.Y),
-                            0,
-                            Vertical - Parent.Size.Y.Offset
-                        )
-                    )
+            local NewPosition = dim2(
+                0,
+                math.clamp(
+                    InitialSize.X.Offset + (Input.Position.X - InitialPosition.X),
+                    0,
+                    Horizontal - Parent.Size.X.Offset
+                ),
+                0,
+                math.clamp(
+                    InitialSize.Y.Offset + (Input.Position.Y - InitialPosition.Y),
+                    0,
+                    Vertical - Parent.Size.Y.Offset
+                )
+            )
 
-                    Parent.Position = NewPosition
-                end
-            end)
-        end 
+            Parent.Position = NewPosition
+        end
+    end)
+end 
 
         function Library:Convert(str)
             local Values = {}
@@ -1031,7 +1031,7 @@ function Library:Window(properties)
     local Cfg = {
         Prefix = properties.Prefix or "Null";
         Suffix = properties.Suffix or "Core";
-        Size = isMobile and dim2(0, 380, 0, 420) or (properties.Size or dim2(0, 620, 0, 471));
+        Size = isMobile and dim2(0, 340, 0, 320) or (properties.Size or dim2(0, 620, 0, 471));
         TabInfo;
         Items = {};
     }
@@ -2390,17 +2390,25 @@ end
                 Cfg.Callback(Flags[Cfg.Flag])
             end
             
-            Items.Outline.MouseButton1Down:Connect(function()
-                Cfg.Dragging = true 
-            end)
+Items.Outline.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        Cfg.Dragging = true 
+    end
+end)
 
-            Library:Connection(InputService.InputChanged, function(input)
-                if Cfg.Dragging and input.UserInputType == Enum.UserInputType.MouseMovement then 
-                    local Size = (input.Position.X - Items.Outline.AbsolutePosition.X) / Items.Outline.AbsoluteSize.X
-                    local Value = ((Cfg.Max - Cfg.Min) * Size) + Cfg.Min
-                    Cfg.Set(Value)
-                end
-            end)
+Library:Connection(InputService.InputChanged, function(input)
+    if Cfg.Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then 
+        local Size = (input.Position.X - Items.Outline.AbsolutePosition.X) / Items.Outline.AbsoluteSize.X
+        local Value = ((Cfg.Max - Cfg.Min) * Size) + Cfg.Min
+        Cfg.Set(Value)
+    end
+end)
+
+Library:Connection(InputService.InputEnded, function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        Cfg.Dragging = false
+    end 
+end)
 
             Library:Connection(InputService.InputEnded, function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
