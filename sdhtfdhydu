@@ -1031,7 +1031,7 @@ function Library:Window(properties)
     local Cfg = {
         Prefix = properties.Prefix or "Null";
         Suffix = properties.Suffix or "Core";
-        Size = isMobile and dim2(0, 380, 0, 320) or (properties.Size or dim2(0, 620, 0, 471));
+        Size = isMobile and dim2(0, 400, 0, 320) or (properties.Size or dim2(0, 620, 0, 471));
         TabInfo;
         Items = {};
     }
