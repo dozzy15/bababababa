@@ -1283,7 +1283,7 @@ if isMobile then
         Text = "Toggle UI";
         FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
         TextSize = 14;
-        TextColor3 = rgb(255, 255, 255);
+        TextColor3 = rgb(128, 128, 128);
         BackgroundColor3 = themes.preset.accent;
         BorderSizePixel = 0;
         Size = dim2(0, 110, 0, 36);
