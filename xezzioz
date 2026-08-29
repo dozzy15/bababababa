@@ -902,6 +902,60 @@ end
             return setmetatable(Cfg, Library)
         end 
 
+function Library:SendNotification(title, message, duration)
+    duration = duration or 3
+    
+    local Notif = Library:Create("Frame", {
+        Parent = Library.Items;
+        Size = dim2(0, 320, 0, 60);
+        Position = dim2(0.5, -160, 0, 30);
+        BackgroundColor3 = themes.preset.inline;
+        BorderColor3 = themes.preset.window_outline;
+        BorderSizePixel = 1;
+        ZIndex = 100;
+        Visible = true;
+        BackgroundTransparency = 0;
+    })
+    
+    Library:Create("UICorner", {
+        Parent = Notif;
+        CornerRadius = dim(0, 6)
+    })
+    
+    local TitleLabel = Library:Create("TextLabel", {
+        Parent = Notif;
+        Text = title or "Notification";
+        TextColor3 = themes.preset.accent;
+        BackgroundTransparency = 1;
+        Size = dim2(1, -20, 0, 20);
+        Position = dim2(0, 10, 0, 5);
+        TextSize = 14;
+        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+        TextXAlignment = Enum.TextXAlignment.Left;
+    })
+    
+    local MsgLabel = Library:Create("TextLabel", {
+        Parent = Notif;
+        Text = message or "";
+        TextColor3 = themes.preset.text_color;
+        BackgroundTransparency = 1;
+        Size = dim2(1, -20, 0, 25);
+        Position = dim2(0, 10, 0, 28);
+        TextSize = 12;
+        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+        TextXAlignment = Enum.TextXAlignment.Left;
+        TextWrapped = true;
+        TextYAlignment = Enum.TextYAlignment.Top;
+        AutomaticSize = Enum.AutomaticSize.Y;
+    })
+    
+    task.wait(duration)
+    
+    local Tween = Library:Tween(Notif, {BackgroundTransparency = 1}, TweenInfo.new(0.3))
+    Tween.Completed:Wait()
+    Notif:Destroy()
+end
+
         function Library:GetConfig()
             local Config = {}
             
