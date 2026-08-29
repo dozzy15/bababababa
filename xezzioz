@@ -42,7 +42,7 @@ local isMobile = InputService.TouchEnabled
             background = rgb(17, 19, 19),
             visible_backgrounds = rgb(20, 23, 22),
             text_color = rgb(221, 223, 222),
-            glow = rgb(204, 197, 8),
+            glow = rgb(0, 0, 0),
             deselected = rgb(89, 91, 91),
         },
         utility = {},
