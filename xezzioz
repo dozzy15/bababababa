@@ -1743,23 +1743,24 @@ function Library:Label(properties)
             AutomaticSize = Enum.AutomaticSize.Y;
         }); Library:Themify(Items.TextInner, "background", "BackgroundColor3");
 
-        Items.TextLabel = Library:Create("TextLabel", {
-            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-            TextColor3 = themes.preset.text_color;
-            BorderColor3 = rgb(0, 0, 0);
-            Text = Cfg.Text;
-            Name = "\0";
-            Size = dim2(1, -10, 0, 0);
-            Position = dim2(0, 5, 0, 2);
-            BorderSizePixel = 0;
-            BackgroundTransparency = 1;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            TextYAlignment = Enum.TextYAlignment.Top;
-            AutomaticSize = Enum.AutomaticSize.Y;
-            TextSize = 14;
-            BackgroundColor3 = rgb(255, 255, 255);
-            RichText = true;
-        });
+Items.TextLabel = Library:Create("TextLabel", {
+    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+    TextColor3 = themes.preset.text_color;
+    BorderColor3 = rgb(0, 0, 0);
+    Text = Cfg.Text;
+    Name = "\0";
+    Parent = Items.TextInner;
+    Size = dim2(1, -10, 0, 0);
+    Position = dim2(0, 5, 0, 2);
+    BorderSizePixel = 0;
+    BackgroundTransparency = 1;
+    TextXAlignment = Enum.TextXAlignment.Left;
+    TextYAlignment = Enum.TextYAlignment.Top;
+    AutomaticSize = Enum.AutomaticSize.Y;
+    TextSize = 14;
+    BackgroundColor3 = rgb(255, 255, 255);
+    RichText = true;
+});
         Library:Themify(Items.TextLabel, "text_color", "TextColor3");
 
         Library:Create("UIPadding", {
@@ -1770,12 +1771,13 @@ function Library:Label(properties)
 
     local labelObj = Items.TextLabel
 
-    function Cfg:SetText(newText)
-        if labelObj then
-            labelObj.Text = newText or ""
-        end
-        Items.Label.Text = newText or ""
+function Cfg:SetText(newText)
+    newText = tostring(newText or "")
+    Cfg.Text = newText
+    if Items.TextLabel then
+        Items.TextLabel.Text = newText
     end
+end
 
     function Cfg:GetText()
         return labelObj and labelObj.Text or ""
