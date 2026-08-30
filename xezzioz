@@ -2072,15 +2072,95 @@ function Library:Dropdown(properties)
         end
     end)
 
-    function Cfg:SetOptions(newOptions)
-        if not self.Items then return end
-        self.Items.Options = newOptions or {}
-        if self.RefreshOptions then
-            self:RefreshOptions(newOptions)
+function Cfg:RefreshOptions(newOptions)
+    newOptions = newOptions or {}
+    Cfg.Options = newOptions
+
+    if Items.Options then
+        for _, opt in ipairs(Items.Options) do
+            if opt.Button then
+                pcall(function() opt.Button:Destroy() end)
+            end
         end
     end
+    Items.Options = {}
 
-    return setmetatable(Cfg, Library)
+    local holder = Items.Window or Items.List or Items.OptionsHolder
+    if not holder then return end
+
+    for _, option in ipairs(newOptions) do
+        local optBtn = Library:Create("TextButton", {
+            Parent = holder,
+            Text = tostring(option),
+            Size = dim2(1, 0, 0, 22),
+            BackgroundTransparency = 1,
+            AutoButtonColor = false,
+            BorderSizePixel = 0,
+            TextColor3 = themes.preset.text_color,
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+            TextSize = 13,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+
+        local hover = Library:Create("Frame", {
+            Parent = optBtn,
+            Size = dim2(1, 0, 1, 0),
+            BackgroundColor3 = themes.preset.accent,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            ZIndex = -1,
+        })
+
+        optBtn.MouseEnter:Connect(function()
+            hover.BackgroundTransparency = 0.8
+        end)
+        optBtn.MouseLeave:Connect(function()
+            hover.BackgroundTransparency = 1
+        end)
+
+        optBtn.MouseButton1Click:Connect(function()
+            if not Cfg.Multi then
+                Cfg.Selected = {option}
+                if Items.Value then
+                    Items.Value.Text = tostring(option)
+                end
+                Cfg.Callback(option)
+                Cfg.SetVisible(false)
+                Cfg.Open = false
+                Flags[Cfg.Flag] = option
+            end
+        end)
+
+        table.insert(Items.Options, {Button = optBtn, Hover = hover, Text = option})
+    end
+
+    if Cfg.Selected and #Cfg.Selected > 0 then
+        local still = false
+        for _, opt in ipairs(newOptions) do
+            if opt == Cfg.Selected[1] then
+                still = true
+                break
+            end
+        end
+        if not still then
+            Cfg.Selected = {}
+            if Items.Value then
+                Items.Value.Text = "Select..."
+            end
+            Flags[Cfg.Flag] = nil
+        end
+    end
+end
+
+function Cfg:SetOptions(newOptions)
+    self:RefreshOptions(newOptions)
+end
+
+function Cfg:Update(newOptions)
+    self:RefreshOptions(newOptions)
+end
+
+return setmetatable(Cfg, Library)
 end
 
         function Library:Section(properties)
@@ -2731,11 +2811,19 @@ end)
             Flags[Cfg.Flag] = {} 
             ConfigFlags[Cfg.Flag] = Cfg.Set
             
-            Cfg.RefreshOptions(Cfg.Options)
-            Cfg.Set(Cfg.Default)
-                
-            return setmetatable(Cfg, Library)
-        end
+function Cfg:SetOptions(newOptions)
+    Cfg.RefreshOptions(newOptions or {})
+end
+
+function Cfg:Update(newOptions)
+    Cfg.RefreshOptions(newOptions or {})
+end
+
+Cfg.RefreshOptions(Cfg.Options)
+Cfg.Set(Cfg.Default)
+
+return setmetatable(Cfg, Library)
+end
 
         function Library:Label(properties)
             local Cfg = {
