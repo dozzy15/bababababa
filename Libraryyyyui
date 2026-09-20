@@ -1,4 +1,4 @@
-if getgenv().Loaded then 
+if getgenv().Loaded and getgenv().Library and getgenv().Library.Unload then 
     getgenv().Library:Unload()
 end 
 
@@ -1341,6 +1341,12 @@ Library:Create("UIListLayout", {
 Library.KeybindListContent = Items.KeybindListContent
 Library.KeybindListFrame = Items.KeybindList
 
+task.defer(function()
+    local KL = Items.KeybindList
+    KL.Position = dim2(0, KL.AbsolutePosition.X, 0, KL.AbsolutePosition.Y)
+    KL.AnchorPoint = vec2(0, 0)
+end)
+
 do
     local KL = Items.KeybindList
     local Dragging = false
@@ -1354,8 +1360,8 @@ KL.InputBegan:Connect(function(Input)
         Dragging = true
         InitialMouseX = Input.Position.X
         InitialMouseY = Input.Position.Y
-        InitialX = KL.AbsolutePosition.X
-        InitialY = KL.AbsolutePosition.Y
+        InitialX = KL.Position.X.Offset
+        InitialY = KL.Position.Y.Offset
     end
 end)
 
