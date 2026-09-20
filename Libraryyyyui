@@ -2974,26 +2974,27 @@ function Library:Textbox(properties)
             BackgroundColor3 = rgb(31, 31, 31)
         });
         
-        Items.Input = Library:Create( "TextBox" , {
-            Parent = Items.Inline;
-            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-            Name = "\0";
-            Active = false;
-            BorderColor3 = rgb(0, 0, 0);
-            Text = Cfg.Default;
-            PlaceholderText = Cfg.PlaceHolder;
-            Size = dim2(1, 0, 1, 0);
-            Selectable = false;
-            Position = dim2(0, 3, 0, 0);
-            BorderSizePixel = 0;
-            TextTruncate = Enum.TextTruncate.AtEnd;
-            BackgroundTransparency = 1;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            AutomaticSize = Enum.AutomaticSize.XY;
-            TextColor3 = rgb(239, 239, 239);
-            TextSize = 14;
-            BackgroundColor3 = rgb(255, 255, 255)
-        });                    
+Items.Input = Library:Create( "TextBox" , {
+    Parent = Items.Inline;
+    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+    Name = "\0";
+    Active = false;
+    BorderColor3 = rgb(0, 0, 0);
+    Text = Cfg.Default;
+    PlaceholderText = Cfg.PlaceHolder;
+    ClearTextOnFocus = false;
+    Size = dim2(1, 0, 1, 0);
+    Selectable = false;
+    Position = dim2(0, 3, 0, 0);
+    BorderSizePixel = 0;
+    TextTruncate = Enum.TextTruncate.AtEnd;
+    BackgroundTransparency = 1;
+    TextXAlignment = Enum.TextXAlignment.Left;
+    AutomaticSize = Enum.AutomaticSize.XY;
+    TextColor3 = rgb(239, 239, 239);
+    TextSize = 14;
+    BackgroundColor3 = rgb(255, 255, 255)
+});                   
     end 
     
     function Cfg.Set(text) 
