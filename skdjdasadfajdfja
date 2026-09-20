@@ -1248,21 +1248,114 @@ function Library:Window(properties)
                     ZIndex = 2;
                 });	Library:Themify(Items.Fade, "background", "BackgroundColor3")                
                 
-                Items.Glow = Library:Create( "ImageLabel" , {
-                    ImageColor3 = rgb(0, 0, 0);
-                    ScaleType = Enum.ScaleType.Slice;
-                    ImageTransparency = 0.6499999761581421;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Parent = Items.Window;
-                    Name = "\0";
-                    Size = dim2(1, 40, 1, 40);
-                    Image = "rbxassetid://18245826428";
-                    BackgroundTransparency = 1;
-                    Position = dim2(0, -20, 0, -20);
-                    BackgroundColor3 = rgb(255, 255, 255);
-                    BorderSizePixel = 0;
-                    SliceCenter = rect(vec2(21, 21), vec2(79, 79))
-                });	Library:Themify(Items.Glow, "glow", "ImageColor3")                
+Items.KeybindList = Library:Create("Frame", {
+    Parent = Library.Items;
+    Name = "\0";
+    AnchorPoint = vec2(0, 1);
+    Position = dim2(0, 20, 1, -20);
+    BorderColor3 = rgb(0, 0, 0);
+    BorderSizePixel = 0;
+    AutomaticSize = Enum.AutomaticSize.XY;
+    BackgroundColor3 = themes.preset.background;
+    ZIndex = 5;
+})
+Library:Themify(Items.KeybindList, "background", "BackgroundColor3")
+
+Library:Create("UIStroke", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    Color = themes.preset.inline;
+    LineJoinMode = Enum.LineJoinMode.Miter;
+    ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+})
+
+Library:Create("UIPadding", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    PaddingTop = dim(0, 9);
+    PaddingBottom = dim(0, 9);
+    PaddingLeft = dim(0, 9);
+    PaddingRight = dim(0, 9);
+})
+
+Items.KeybindListLiner = Library:Create("Frame", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    Position = dim2(0, -9, 0, -9);
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 18, 0, 2);
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.accent;
+    ZIndex = 5;
+})
+Library:Themify(Items.KeybindListLiner, "accent", "BackgroundColor3")
+
+Items.KeybindListTitle = Library:Create("TextLabel", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+    TextColor3 = themes.preset.text_color;
+    BorderColor3 = rgb(0, 0, 0);
+    Text = "Keybinds";
+    BackgroundTransparency = 1;
+    TextXAlignment = Enum.TextXAlignment.Left;
+    Size = dim2(0, 75, 0, 15);
+    BorderSizePixel = 0;
+    TextSize = 14;
+    BackgroundColor3 = rgb(255, 255, 255);
+    ZIndex = 5;
+})
+Library:Themify(Items.KeybindListTitle, "text_color", "TextColor3")
+
+Items.KeybindListSeparator = Library:Create("Frame", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    Position = dim2(0, 0, 0, 21);
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 0, 0, 1);
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.inline;
+    ZIndex = 5;
+})
+Library:Themify(Items.KeybindListSeparator, "inline", "BackgroundColor3")
+
+Items.KeybindListContent = Library:Create("Frame", {
+    Parent = Items.KeybindList;
+    Name = "\0";
+    BackgroundTransparency = 1;
+    Position = dim2(0, 0, 0, 28);
+    BorderColor3 = rgb(0, 0, 0);
+    BorderSizePixel = 0;
+    AutomaticSize = Enum.AutomaticSize.XY;
+    BackgroundColor3 = rgb(255, 255, 255);
+    ZIndex = 5;
+})
+
+Library:Create("UIListLayout", {
+    Parent = Items.KeybindListContent;
+    Name = "\0";
+    Padding = dim(0, 4);
+    SortOrder = Enum.SortOrder.LayoutOrder;
+})
+
+Library.KeybindListContent = Items.KeybindListContent
+Library.KeybindListFrame = Items.KeybindList
+
+Items.Glow = Library:Create( "ImageLabel" , {
+    ImageColor3 = rgb(0, 0, 0);
+    ScaleType = Enum.ScaleType.Slice;
+    ImageTransparency = 0.6499999761581421;
+    BorderColor3 = rgb(0, 0, 0);
+    Parent = Items.Window;
+    Name = "\0";
+    Size = dim2(1, 40, 1, 40);
+    Image = "rbxassetid://18245826428";
+    BackgroundTransparency = 1;
+    Position = dim2(0, -20, 0, -20);
+    BackgroundColor3 = rgb(255, 255, 255);
+    BorderSizePixel = 0;
+    SliceCenter = rect(vec2(21, 21), vec2(79, 79))
+});	Library:Themify(Items.Glow, "glow", "ImageColor3")            
             end
 
 do -- Other
@@ -2913,131 +3006,6 @@ end
             return setmetatable(Cfg, Library)
         end 
 
-                function Library:KeybindList()
-            local Cfg = {
-                Items = {},
-                Elements = {},
-            }
-
-            local Items = Cfg.Items; do 
-                Items.KeybindList = Library:Create( "Frame" , {
-                    Parent = Library.Items;
-                    Name = "\0";
-                    AnchorPoint = vec2(0, 0.5);
-                    Position = dim2(0, 20, 0.5, 0);
-                    BorderColor3 = rgb(0, 0, 0);
-                    BorderSizePixel = 0;
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    BackgroundColor3 = themes.preset.visible_backgrounds
-                }); Library:Themify(Items.KeybindList, "visible_backgrounds", "BackgroundColor3")
-
-                Library:Create( "UIStroke" , {
-                    Parent = Items.KeybindList;
-                    Color = themes.preset.inline;
-                    ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                });
-
-                Library:Create( "UIPadding" , {
-                    Parent = Items.KeybindList;
-                    PaddingTop = dim(0, 9);
-                    PaddingBottom = dim(0, 9);
-                    PaddingRight = dim(0, 9);
-                    PaddingLeft = dim(0, 9)
-                });
-
-                Items.Liner = Library:Create( "Frame" , {
-                    Parent = Items.KeybindList;
-                    Name = "\0";
-                    Position = dim2(0, -9, 0, -9);
-                    Size = dim2(1, 18, 0, 2);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = themes.preset.accent
-                }); Library:Themify(Items.Liner, "accent", "BackgroundColor3")
-
-                Items.Title = Library:Create( "TextLabel" , {
-                    Parent = Items.KeybindList;
-                    Name = "\0";
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                    TextColor3 = themes.preset.text_color;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Text = "Keybinds";
-                    Size = dim2(0, 75, 0, 15);
-                    BackgroundTransparency = 1;
-                    TextXAlignment = Enum.TextXAlignment.Left;
-                    BorderSizePixel = 0;
-                    TextSize = 14;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                }); Library:Themify(Items.Title, "text_color", "TextColor3")
-
-                Items.Liner2 = Library:Create( "Frame" , {
-                    Parent = Items.KeybindList;
-                    Name = "\0";
-                    Position = dim2(0, 0, 0, 21);
-                    Size = dim2(1, 0, 0, 1);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = themes.preset.inline
-                }); Library:Themify(Items.Liner2, "inline", "BackgroundColor3")
-
-                Items.Content = Library:Create( "Frame" , {
-                    Parent = Items.KeybindList;
-                    Name = "\0";
-                    BackgroundTransparency = 1;
-                    Position = dim2(0, 0, 0, 28);
-                    BorderColor3 = rgb(0, 0, 0);
-                    BorderSizePixel = 0;
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });
-
-                Library:Create( "UIListLayout" , {
-                    Parent = Items.Content;
-                    Padding = dim(0, 4);
-                    SortOrder = Enum.SortOrder.LayoutOrder
-                });
-            end
-
-            function Cfg:Add(name, key)
-                local label = Library:Create( "TextLabel" , {
-                    Parent = Items.Content;
-                    Name = "\0";
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                    TextColor3 = themes.preset.text_color;
-                    TextTransparency = 0.4;
-                    Text = name .. " [" .. key .. "]";
-                    Size = dim2(0, 0, 0, 15);
-                    BackgroundTransparency = 1;
-                    BorderSizePixel = 0;
-                    BorderColor3 = rgb(0, 0, 0);
-                    AutomaticSize = Enum.AutomaticSize.X;
-                    TextSize = 14;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                }); Library:Themify(label, "text_color", "TextColor3")
-
-                function label:SetText(n, k)
-                    label.Text = n .. " [" .. k .. "]"
-                end
-
-                function label:SetStatus(bool)
-                    if label.Text:find("Menu Bind") then
-                        label.Visible = false
-                        return
-                    end
-                    label.Visible = bool
-                end
-
-                table.insert(Cfg.Elements, label)
-                return label
-            end
-
-            function Cfg:SetVisibility(bool)
-                Items.KeybindList.Visible = bool
-            end
-
-            Library.KeyList = Cfg
-
-            return setmetatable(Cfg, Library)
-        end
-
 function Library:Textbox(properties) 
     local Cfg = {
         Name = properties.Name or "TextBox",
@@ -3169,35 +3137,28 @@ end
                 Active = Cfg.Active
             }
 
-                    function Library:Keybind(properties) 
-            local Cfg = {
-                Flag = properties.Flag or properties.Name;
-                Callback = properties.Callback or function() end;
-                Name = properties.Name or nil; 
+            local KeyListEntry = nil
 
-                Key = properties.Key or nil;
-                Mode = properties.Mode or "Toggle";
-                Active = properties.Default or false; 
-                
-                Open = false;
-                Binding;
-                Ignore = false;
-
-                Items = {}
-            }
-
-            Flags[Cfg.Flag] = {
-                Mode = Cfg.Mode,
-                Key = Cfg.Key, 
-                Active = Cfg.Active
-            }
-
-            local KeyListItem
-            if Library.KeyList then
-                KeyListItem = Library.KeyList:Add(Cfg.Name or Cfg.Flag or "Key", "None")
+            if Library.KeybindListContent then
+                KeyListEntry = Library:Create("TextLabel", {
+                    Parent = Library.KeybindListContent;
+                    Name = "\0";
+                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+                    TextColor3 = themes.preset.text_color;
+                    TextTransparency = 0.4;
+                    Text = (Cfg.Name or Cfg.Flag or "") .. " [--]";
+                    Size = dim2(0, 0, 0, 15);
+                    BackgroundTransparency = 1;
+                    BorderSizePixel = 0;
+                    BorderColor3 = rgb(0, 0, 0);
+                    AutomaticSize = Enum.AutomaticSize.X;
+                    TextSize = 13;
+                    Visible = false;
+                    BackgroundColor3 = rgb(255, 255, 255);
+                    ZIndex = 5;
+                })
+                Library:Themify(KeyListEntry, "text_color", "TextColor3")
             end
-
-            local Items = Cfg.Items; do 
 
             local Items = Cfg.Items; do 
                 -- Component
@@ -3374,9 +3335,16 @@ end
                     active = Cfg.Active
                 }
 
-                if KeyListItem then
-                    KeyListItem:SetText(Cfg.Name or Cfg.Flag or "Key", __text or "None")
-                    KeyListItem:SetStatus(Cfg.Active)
+                if KeyListEntry then
+                    local keyText = tostring(Cfg.Key) ~= "Enums"
+                        and (Keys[Cfg.Key] or tostring(Cfg.Key):gsub("Enum%.", ""))
+                        or "--"
+                    local displayText = tostring(keyText):gsub("KeyCode%.", ""):gsub("UserInputType%.", "")
+                    KeyListEntry.Text = (Cfg.Name or Cfg.Flag or "") .. " [" .. displayText .. "]"
+                    KeyListEntry.Visible = Cfg.Active
+                        and Cfg.Key ~= nil
+                        and tostring(Cfg.Key) ~= "Enums"
+                        and displayText ~= "NONE"
                 end
             end
 
@@ -3585,17 +3553,6 @@ end
                 window.ToggleMenu(bool) 
             end, Default = true})
 
-            Library.KeyList = Library:KeybindList()
-
-            Section:Toggle({
-                Name = "Keybind List",
-                Flag = "KeybindListToggle",
-                Default = true,
-                Callback = function(bool)
-                    Library.KeyList:SetVisibility(bool)
-                end
-            })
-
             delay(2, function() window.Tweening = false end)
         end
     --
@@ -3720,5 +3677,3 @@ end
 -- 
 
 return Library
-end
-end
