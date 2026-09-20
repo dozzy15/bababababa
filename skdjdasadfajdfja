@@ -1251,8 +1251,8 @@ function Library:Window(properties)
 Items.KeybindList = Library:Create("Frame", {
     Parent = Library.Items;
     Name = "\0";
-    AnchorPoint = vec2(0, 1);
-    Position = dim2(0, 20, 1, -20);
+    AnchorPoint = vec2(0, 0);
+    Position = dim2(0, 20, 1, -120);
     BorderColor3 = rgb(0, 0, 0);
     BorderSizePixel = 0;
     AutomaticSize = Enum.AutomaticSize.XY;
@@ -1272,10 +1272,10 @@ Library:Create("UIStroke", {
 Library:Create("UIPadding", {
     Parent = Items.KeybindList;
     Name = "\0";
-    PaddingTop = dim(0, 9);
-    PaddingBottom = dim(0, 9);
-    PaddingLeft = dim(0, 9);
-    PaddingRight = dim(0, 9);
+    PaddingTop = dim(0, 12);
+    PaddingBottom = dim(0, 12);
+    PaddingLeft = dim(0, 14);
+    PaddingRight = dim(0, 14);
 })
 
 Items.KeybindListLiner = Library:Create("Frame", {
@@ -1299,9 +1299,9 @@ Items.KeybindListTitle = Library:Create("TextLabel", {
     Text = "Keybinds";
     BackgroundTransparency = 1;
     TextXAlignment = Enum.TextXAlignment.Left;
-    Size = dim2(0, 100, 0, 20);
+    Size = dim2(0, 120, 0, 24);
     BorderSizePixel = 0;
-    TextSize = 16;
+    TextSize = 20;
     BackgroundColor3 = rgb(255, 255, 255);
     ZIndex = 5;
 })
@@ -1310,7 +1310,7 @@ Library:Themify(Items.KeybindListTitle, "text_color", "TextColor3")
 Items.KeybindListSeparator = Library:Create("Frame", {
     Parent = Items.KeybindList;
     Name = "\0";
-    Position = dim2(0, 0, 0, 27);
+    Position = dim2(0, 0, 0, 32);
     BorderColor3 = rgb(0, 0, 0);
     Size = dim2(1, 0, 0, 1);
     BorderSizePixel = 0;
@@ -1323,7 +1323,7 @@ Items.KeybindListContent = Library:Create("Frame", {
     Parent = Items.KeybindList;
     Name = "\0";
     BackgroundTransparency = 1;
-    Position = dim2(0, 0, 0, 35);
+    Position = dim2(0, 0, 0, 42);
     BorderColor3 = rgb(0, 0, 0);
     BorderSizePixel = 0;
     AutomaticSize = Enum.AutomaticSize.XY;
@@ -1334,14 +1334,51 @@ Items.KeybindListContent = Library:Create("Frame", {
 Library:Create("UIListLayout", {
     Parent = Items.KeybindListContent;
     Name = "\0";
-    Padding = dim(0, 6);
+    Padding = dim(0, 8);
     SortOrder = Enum.SortOrder.LayoutOrder;
 })
 
 Library.KeybindListContent = Items.KeybindListContent
 Library.KeybindListFrame = Items.KeybindList
 
-Library:Draggify(Items.KeybindList)
+do
+    local KL = Items.KeybindList
+    local Dragging = false
+    local InitialX = 0
+    local InitialY = 0
+    local InitialMouseX = 0
+    local InitialMouseY = 0
+
+    KL.InputBegan:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+            InitialMouseX = Input.Position.X
+            InitialMouseY = Input.Position.Y
+            InitialX = KL.Position.X.Offset
+            InitialY = KL.Position.Y.Offset
+        end
+    end)
+
+    KL.InputEnded:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = false
+        end
+    end)
+
+    Library:Connection(InputService.InputChanged, function(Input)
+        if Dragging and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
+            local ScreenX = Camera.ViewportSize.X
+            local ScreenY = Camera.ViewportSize.Y
+            local SizeX = KL.AbsoluteSize.X
+            local SizeY = KL.AbsoluteSize.Y
+
+            local NewX = math.clamp(InitialX + (Input.Position.X - InitialMouseX), 0, ScreenX - SizeX)
+            local NewY = math.clamp(InitialY + (Input.Position.Y - InitialMouseY), 0, ScreenY - SizeY)
+
+            KL.Position = dim2(0, NewX, 0, NewY)
+        end
+    end)
+end
 
 Items.Glow = Library:Create( "ImageLabel" , {
     ImageColor3 = rgb(0, 0, 0);
@@ -2360,7 +2397,7 @@ end
                 Name = properties.Name or "Toggle";
                 Flag = properties.Flag or properties.Name or "Toggle";
                 Enabled = properties.Default or false;
-                Callback = properties.callback or function() end;
+                Callback = properties.Callback or properties.callback or function() end;
 
                 -- Sub / Group Section
                 Folding = properties.Folding or false;
@@ -3119,7 +3156,7 @@ end
         function Library:Keybind(properties) 
             local Cfg = {
                 Flag = properties.Flag or properties.Name;
-                Callback = properties.Callback or function() end;
+                Callback = properties.Callback or properties.callback or function() end;
                 Name = properties.Name or nil; 
 
                 Key = properties.Key or nil;
@@ -3147,14 +3184,14 @@ end
                     Name = "\0";
                     FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
                     TextColor3 = themes.preset.text_color;
-                    TextTransparency = 0.2;
+                    TextTransparency = 0.1;
                     Text = (Cfg.Name or Cfg.Flag or "") .. " [--]";
-                    Size = dim2(0, 0, 0, 18);
+                    Size = dim2(0, 0, 0, 22);
                     BackgroundTransparency = 1;
                     BorderSizePixel = 0;
                     BorderColor3 = rgb(0, 0, 0);
                     AutomaticSize = Enum.AutomaticSize.X;
-                    TextSize = 15;
+                    TextSize = 17;
                     Visible = false;
                     BackgroundColor3 = rgb(255, 255, 255);
                     ZIndex = 5;
@@ -3342,11 +3379,13 @@ end
                         and (Keys[Cfg.Key] or tostring(Cfg.Key):gsub("Enum%.", ""))
                         or "--"
                     local displayText = tostring(keyText):gsub("KeyCode%.", ""):gsub("UserInputType%.", "")
-                    KeyListEntry.Text = (Cfg.Name or Cfg.Flag or "") .. " [" .. displayText .. "]"
-                    KeyListEntry.Visible = Cfg.Active
-                        and Cfg.Key ~= nil
+                    local label = (Cfg.Name or Cfg.Flag or "") .. " [" .. displayText .. "]"
+                    KeyListEntry.Text = label
+                    KeyListEntry.TextTransparency = Cfg.Active and 0.1 or 0.5
+                    KeyListEntry.Visible = Cfg.Key ~= nil
                         and tostring(Cfg.Key) ~= "Enums"
                         and displayText ~= "NONE"
+                        and displayText ~= "--"
                 end
             end
 
@@ -3549,7 +3588,7 @@ end
             Section:Toggle({
                 Name = "Keybind List";
                 Flag = "keybind_list_visible";
-                Default = true;
+                Default = false;
                 Callback = function(bool)
                     if Library.KeybindListFrame then
                         Library.KeybindListFrame.Visible = bool
