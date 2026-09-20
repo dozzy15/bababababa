@@ -1251,8 +1251,8 @@ function Library:Window(properties)
 Items.KeybindList = Library:Create("Frame", {
     Parent = Library.Items;
     Name = "\0";
-    AnchorPoint = vec2(0, 0);
-    Position = dim2(0, 20, 0.5, -((Camera.ViewportSize.Y - 120) / 2));
+    AnchorPoint = vec2(0, 0.5);
+    Position = dim2(0, 20, 0.5, 0);
     BorderColor3 = rgb(0, 0, 0);
     BorderSizePixel = 0;
     AutomaticSize = Enum.AutomaticSize.XY;
