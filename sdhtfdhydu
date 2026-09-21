@@ -1,4 +1,4 @@
-if getgenv().Loaded then 
+if getgenv().Loaded and getgenv().Library and getgenv().Library.Unload then 
     getgenv().Library:Unload()
 end 
 
@@ -21,7 +21,7 @@ local isMobile = InputService.TouchEnabled
 
 -- Library init
     getgenv().Library = {
-        Directory = "Trapg",
+        Directory = "NullCore",
         Folders = {
             "/fonts",
             "/configs",
@@ -36,12 +36,12 @@ local isMobile = InputService.TouchEnabled
     local themes = {
         preset = {
             accent = rgb(204, 197, 8),
-            window_outline = rgb(0, 0, 0),
+            window_outline = rgb(204, 197, 8),
             inline = rgb(25, 27, 27),
             background = rgb(17, 19, 19),
             visible_backgrounds = rgb(20, 23, 22),
             text_color = rgb(221, 223, 222),
-            glow = rgb(0, 0, 0),
+            glow = rgb(204, 197, 8),
             deselected = rgb(89, 91, 91),
         },
         utility = {},
@@ -1251,8 +1251,8 @@ function Library:Window(properties)
 Items.KeybindList = Library:Create("Frame", {
     Parent = Library.Items;
     Name = "\0";
-    AnchorPoint = vec2(0, 1);
-    Position = dim2(0, 20, 1, -20);
+    AnchorPoint = vec2(0, 0.5);
+    Position = dim2(0, 20, 0.5, 0);
     BorderColor3 = rgb(0, 0, 0);
     BorderSizePixel = 0;
     AutomaticSize = Enum.AutomaticSize.XY;
@@ -1341,19 +1341,29 @@ Library:Create("UIListLayout", {
 Library.KeybindListContent = Items.KeybindListContent
 Library.KeybindListFrame = Items.KeybindList
 
+task.defer(function()
+    local KL = Items.KeybindList
+    KL.Position = dim2(0, KL.AbsolutePosition.X, 0, KL.AbsolutePosition.Y)
+    KL.AnchorPoint = vec2(0, 0)
+end)
+
 do
     local KL = Items.KeybindList
     local Dragging = false
-    local InitialPosition
-    local InitialMouse
+    local InitialX = 0
+    local InitialY = 0
+    local InitialMouseX = 0
+    local InitialMouseY = 0
 
-    KL.InputBegan:Connect(function(Input)
-        if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-            Dragging = true
-            InitialMouse = Input.Position
-            InitialPosition = KL.Position
-        end
-    end)
+KL.InputBegan:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+        Dragging = true
+        InitialMouseX = Input.Position.X
+        InitialMouseY = Input.Position.Y
+        InitialX = KL.Position.X.Offset
+        InitialY = KL.Position.Y.Offset
+    end
+end)
 
     KL.InputEnded:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
@@ -1363,25 +1373,21 @@ do
 
     Library:Connection(InputService.InputChanged, function(Input)
         if Dragging and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
-            local dx = Input.Position.X - InitialMouse.X
-            local dy = Input.Position.Y - InitialMouse.Y
-
             local ScreenX = Camera.ViewportSize.X
             local ScreenY = Camera.ViewportSize.Y
             local SizeX = KL.AbsoluteSize.X
             local SizeY = KL.AbsoluteSize.Y
 
-            local NewX = math.clamp(InitialPosition.X.Offset + dx, 0, ScreenX - SizeX)
-            local NewY = math.clamp(InitialPosition.Y.Offset + dy, SizeY, ScreenY)
+            local NewX = math.clamp(InitialX + (Input.Position.X - InitialMouseX), 0, ScreenX - SizeX)
+            local NewY = math.clamp(InitialY + (Input.Position.Y - InitialMouseY), 0, ScreenY - SizeY)
 
-            KL.AnchorPoint = vec2(0, 0)
-            Library:Tween(KL, {Position = dim2(0, NewX, 0, NewY - SizeY)}, TweenInfo.new(0.07, Enum.EasingStyle.Linear))
+            KL.Position = dim2(0, NewX, 0, NewY)
         end
     end)
 end
 
 Items.Glow = Library:Create( "ImageLabel" , {
-    ImageColor3 = rgb(0, 0, 0);
+    ImageColor3 = themes.preset.glow,
     ScaleType = Enum.ScaleType.Slice;
     ImageTransparency = 0.6499999761581421;
     BorderColor3 = rgb(0, 0, 0);
@@ -2397,7 +2403,7 @@ end
                 Name = properties.Name or "Toggle";
                 Flag = properties.Flag or properties.Name or "Toggle";
                 Enabled = properties.Default or false;
-                Callback = properties.callback or function() end;
+                Callback = properties.Callback or properties.callback or function() end;
 
                 -- Sub / Group Section
                 Folding = properties.Folding or false;
