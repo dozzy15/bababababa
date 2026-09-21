@@ -41,7 +41,7 @@ local isMobile = InputService.TouchEnabled
             background = rgb(17, 19, 19),
             visible_backgrounds = rgb(20, 23, 22),
             text_color = rgb(221, 223, 222),
-            glow = rgb(0, 0, 0),
+            glow = rgb(204, 197, 8),
             deselected = rgb(89, 91, 91),
         },
         utility = {},
@@ -1387,7 +1387,7 @@ end)
 end
 
 Items.Glow = Library:Create( "ImageLabel" , {
-    ImageColor3 = rgb(0, 0, 0);
+    ImageColor3 = themes.preset.glow,
     ScaleType = Enum.ScaleType.Slice;
     ImageTransparency = 0.6499999761581421;
     BorderColor3 = rgb(0, 0, 0);
