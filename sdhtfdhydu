@@ -993,9 +993,13 @@ end
             return math.floor(num * Multiplier + 0.5) / Multiplier
         end
 
-        function Library:Themify(instance, theme, property)
-            table.insert(themes.utility[theme][property], instance)
-        end
+function Library:Themify(instance, theme, property)
+    table.insert(themes.utility[theme][property], instance)
+
+    if themes.preset[theme] then
+        instance[property] = themes.preset[theme]
+    end
+end
 
         function Library:SaveGradient(instance, theme) -- instance, tabfill or background, color
             table.insert(themes.gradients[theme], instance)
