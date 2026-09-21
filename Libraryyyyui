@@ -36,12 +36,12 @@ local isMobile = InputService.TouchEnabled
     local themes = {
         preset = {
             accent = rgb(204, 197, 8),
-            window_outline = rgb(0, 0, 0),
+            window_outline = rgb(204, 197, 8),
             inline = rgb(25, 27, 27),
             background = rgb(17, 19, 19),
             visible_backgrounds = rgb(20, 23, 22),
             text_color = rgb(221, 223, 222),
-            glow = rgb(0, 0, 0),
+            glow = rgb(204, 197, 8),
             deselected = rgb(89, 91, 91),
         },
         utility = {},
@@ -993,9 +993,13 @@ end
             return math.floor(num * Multiplier + 0.5) / Multiplier
         end
 
-        function Library:Themify(instance, theme, property)
-            table.insert(themes.utility[theme][property], instance)
-        end
+function Library:Themify(instance, theme, property)
+    table.insert(themes.utility[theme][property], instance)
+
+    if themes.preset[theme] then
+        instance[property] = themes.preset[theme]
+    end
+end
 
         function Library:SaveGradient(instance, theme) -- instance, tabfill or background, color
             table.insert(themes.gradients[theme], instance)
@@ -1108,7 +1112,7 @@ function Library:Window(properties)
                     BorderColor3 = rgb(0, 0, 0);
                     Size = Cfg.Size;
                     BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(0, 0, 0)
+                    BackgroundColor3 = themes.preset.window_outline
                 }); Items.Window.Position = dim2(0, Items.Window.AbsolutePosition.X, 0, Items.Window.AbsolutePosition.Y); Library:Themify(Items.Window, "window_outline", "BackgroundColor3");
                 
                 Items.Outline = Library:Create( "Frame" , {
@@ -1118,7 +1122,7 @@ function Library:Window(properties)
                     BorderColor3 = rgb(0, 0, 0);
                     ZIndex = 2;
                     BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(0, 0, 0)
+                    BackgroundColor3 = themes.preset.window_outline
                 }); Library:Themify(Items.Outline, "window_outline", "BackgroundColor3")
                 
                 Items.Inline = Library:Create( "Frame" , {
@@ -1387,7 +1391,7 @@ end)
 end
 
 Items.Glow = Library:Create( "ImageLabel" , {
-    ImageColor3 = rgb(0, 0, 0);
+    ImageColor3 = themes.preset.glow,
     ScaleType = Enum.ScaleType.Slice;
     ImageTransparency = 0.6499999761581421;
     BorderColor3 = rgb(0, 0, 0);
