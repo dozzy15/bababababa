@@ -1814,109 +1814,96 @@ function Library:Label(properties)
     }
 
     local Items = Cfg.Items; do
-        Items.Label = Library:Create("TextButton", {
-            Active = false;
-            Text = Cfg.Text;
-            Parent = self.Items.Elements;
-            AutoButtonColor = false;
-            Name = "\0";
-            Size = dim2(1, 0, 0, 0);
-            BackgroundTransparency = 1;
-            Selectable = false;
-            BorderSizePixel = 0;
-            BorderColor3 = rgb(0, 0, 0);
-            AutomaticSize = Enum.AutomaticSize.Y;
-            BackgroundColor3 = rgb(255, 255, 255);
-            TextXAlignment = Enum.TextXAlignment.Left;
-            TextYAlignment = Enum.TextYAlignment.Top;
-            TextColor3 = themes.preset.text_color;
-            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-            TextSize = 14;
-            RichText = true;
-        })
-        Library:Themify(Items.Label, "text_color", "TextColor3");
+        Items.Label = Library:Create("Frame", {
+            Parent = self.Items.Elements,
+            Name = "\0",
+            BackgroundTransparency = 1,
+            Size = dim2(1, 0, 0, 0),
+            BorderSizePixel = 0,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            BackgroundColor3 = rgb(255, 255, 255),
+        });
 
         Items.Title = Library:Create("TextLabel", {
-            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-            TextColor3 = themes.preset.text_color;
-            BorderColor3 = rgb(0, 0, 0);
-            Text = Cfg.Name;
-            Parent = Items.Label;
-            Name = "\0";
-            RichText = true;
-            BackgroundTransparency = 1;
-            AutomaticSize = Enum.AutomaticSize.XY;
-            BorderSizePixel = 0;
-            ZIndex = 2;
-            TextSize = 14;
-            BackgroundColor3 = rgb(255, 255, 255);
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+            TextColor3 = themes.preset.text_color,
+            Text = Cfg.Name,
+            Parent = Items.Label,
+            Name = "\0",
+            RichText = true,
+            BackgroundTransparency = 1,
+            AutomaticSize = Enum.AutomaticSize.XY,
+            BorderSizePixel = 0,
+            ZIndex = 2,
+            TextSize = 14,
+            BackgroundColor3 = rgb(255, 255, 255),
         });
         Library:Themify(Items.Title, "text_color", "TextColor3");
 
         Items.TextFrame = Library:Create("Frame", {
-            Parent = Items.Label;
-            Name = "\0";
-            Position = dim2(0, 0, 0, 22);
-            Size = dim2(1, 0, 0, 0);
-            BorderColor3 = rgb(0, 0, 0);
-            BorderSizePixel = 0;
-            BackgroundColor3 = themes.preset.inline;
-            AutomaticSize = Enum.AutomaticSize.Y;
-        }); Library:Themify(Items.TextFrame, "inline", "BackgroundColor3");
+            Parent = Items.Label,
+            Name = "\0",
+            Position = dim2(0, 0, 0, 22),
+            Size = dim2(1, 0, 0, 0),
+            BorderSizePixel = 0,
+            BackgroundColor3 = themes.preset.inline,
+            AutomaticSize = Enum.AutomaticSize.Y,
+        });
+        Library:Themify(Items.TextFrame, "inline", "BackgroundColor3");
 
         Items.TextInner = Library:Create("Frame", {
-            Parent = Items.TextFrame;
-            Name = "\0";
-            Position = dim2(0, 1, 0, 1);
-            Size = dim2(1, -2, 1, -2);
-            BorderColor3 = rgb(0, 0, 0);
-            BorderSizePixel = 0;
-            BackgroundColor3 = themes.preset.background;
-            AutomaticSize = Enum.AutomaticSize.Y;
-        }); Library:Themify(Items.TextInner, "background", "BackgroundColor3");
+            Parent = Items.TextFrame,
+            Name = "\0",
+            Position = dim2(0, 1, 0, 1),
+            Size = dim2(1, -2, 1, -2),
+            BorderSizePixel = 0,
+            BackgroundColor3 = themes.preset.background,
+            AutomaticSize = Enum.AutomaticSize.Y,
+        });
+        Library:Themify(Items.TextInner, "background", "BackgroundColor3");
 
-Items.TextLabel = Library:Create("TextLabel", {
-    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-    TextColor3 = themes.preset.text_color;
-    BorderColor3 = rgb(0, 0, 0);
-    Text = Cfg.Text;
-    Name = "\0";
-    Parent = Items.TextInner;
-    Size = dim2(1, -10, 0, 0);
-    Position = dim2(0, 5, 0, 2);
-    BorderSizePixel = 0;
-    BackgroundTransparency = 1;
-    TextXAlignment = Enum.TextXAlignment.Left;
-    TextYAlignment = Enum.TextYAlignment.Top;
-    AutomaticSize = Enum.AutomaticSize.Y;
-    TextSize = 14;
-    BackgroundColor3 = rgb(255, 255, 255);
-    RichText = true;
-});
+        Items.TextLabel = Library:Create("TextLabel", {
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+            TextColor3 = themes.preset.text_color,
+            Text = Cfg.Text,
+            Name = "\0",
+            Parent = Items.TextInner,
+            Size = dim2(1, -10, 0, 0),
+            Position = dim2(0, 5, 0, 2),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Top,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            TextSize = 14,
+            BackgroundColor3 = rgb(255, 255, 255),
+            RichText = true,
+        });
         Library:Themify(Items.TextLabel, "text_color", "TextColor3");
 
         Library:Create("UIPadding", {
-            PaddingBottom = dim(0, 2);
-            Parent = Items.Label;
+            PaddingBottom = dim(0, 2),
+            Parent = Items.Label,
         });
     end
 
-    local labelObj = Items.TextLabel
-
-function Cfg:SetText(newText)
-    newText = tostring(newText or "")
-    Cfg.Text = newText
-    if Items.TextLabel then
+    function Cfg:SetText(newText)
+        newText = tostring(newText or "")
+        Cfg.Text = newText
         Items.TextLabel.Text = newText
     end
-end
 
     function Cfg:GetText()
-        return labelObj and labelObj.Text or ""
+        return Items.TextLabel.Text
     end
 
-    Flags[Cfg.Name] = Cfg.Text
-    ConfigFlags[Cfg.Name] = function(value) Cfg:SetText(value) end
+    Cfg.Set = Cfg.SetText
+
+    if properties.Flag then
+        Cfg.Flag = properties.Flag
+        Flags[Cfg.Flag] = Cfg.Text
+        ConfigFlags[Cfg.Flag] = function(value) Cfg:SetText(value) end
+    end
 
     return setmetatable(Cfg, Library)
 end
@@ -2961,95 +2948,6 @@ Cfg.Set(Cfg.Default)
 
 return setmetatable(Cfg, Library)
 end
-
-        function Library:Label(properties)
-            local Cfg = {
-                Name = properties.Name or "Label",
-
-                -- Other
-                Items = {};
-            }
-
-            local Items = Cfg.Items; do 
-                Items.Label = Library:Create( "Frame" , {
-                    Parent = self.Items.Elements;
-                    Name = "\0";
-                    BackgroundTransparency = 1;
-                    Size = dim2(1, 0, 0, 0);
-                    BorderColor3 = rgb(0, 0, 0);
-                    BorderSizePixel = 0;
-                    AutomaticSize = Enum.AutomaticSize.Y;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });
-                
-                Items.Title = Library:Create( "TextLabel" , {
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                    TextColor3 = themes.preset.text_color;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Text = Cfg.Name;
-                    Parent = Items.Label;
-                    Name = "\0";
-                    BackgroundTransparency = 1;
-                    RichText = true;
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    BorderSizePixel = 0;
-                    ZIndex = 2;
-                    TextSize = 14;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });	Library:Themify(Items.Title, "text_color", "BackgroundColor3")
-                
-                Items.Components = Library:Create( "Frame" , {
-                    Parent = Items.Label;
-                    Name = "\0";
-                    Position = dim2(1, 0, 0, 0);
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(0, 0, 1, 0);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });
-                
-                Library:Create( "UIListLayout" , {
-                    FillDirection = Enum.FillDirection.Horizontal;
-                    HorizontalAlignment = Enum.HorizontalAlignment.Right;
-                    Parent = Items.Components;
-                    Padding = dim(0, 7);
-                    SortOrder = Enum.SortOrder.LayoutOrder
-                });                        
-            end 
-
-            function Cfg.Set(Text)
-                Items.Title.Text = Text
-            end 
-
-            return setmetatable(Cfg, Library)
-        end
-        
-        function Library:Colorpicker(properties) 
-            local Cfg = {
-                Name = properties.Name or "Color", 
-                Flag = properties.Flag or properties.Name or "Colorpicker",
-                Callback = properties.Callback or function() end,
-
-                Color = properties.Color or color(1, 1, 1), -- Default to white color if not provided
-                Alpha = properties.Alpha or properties.Transparency or 0,
-                
-                -- Other
-                Open = false;
-                Items = {};
-            }
-            
-            local Picker = self:Keypicker(Cfg)
-
-            local Items = Picker.Items; do
-                Cfg.Items = Items
-                Cfg.Set = Picker.Set
-            end;
-            
-            Cfg.Set(Cfg.Color, Cfg.Alpha)
-            ConfigFlags[Cfg.Flag] = Cfg.Set
-
-            return setmetatable(Cfg, Library)
-        end 
 
 function Library:Textbox(properties) 
     local Cfg = {
