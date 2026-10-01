@@ -1022,6 +1022,17 @@ end
             end
 
             themes.preset[theme] = color 
+
+            if theme == "accent" then
+                for property, instances in themes.utility.glow do 
+                    for _, object in instances do
+                        pcall(function()
+                            object[property] = color 
+                        end)
+                    end
+                end
+                themes.preset.glow = color 
+            end
         end 
 
         function Library:Connection(signal, callback)
@@ -1202,6 +1213,33 @@ function Library:Window(properties)
                     BackgroundColor3 = themes.preset.inline
                 });	Library:Themify(Items.Filler, "inline", "BackgroundColor3")
                 
+                Items.SectionTitleGlow = Library:Create( "TextLabel" , {
+                    RichText = true;
+                    Parent = Items.TitleHolder;
+                    TextColor3 = themes.preset.accent;
+                    TextTransparency = 1;
+                    TextStrokeColor3 = themes.preset.accent;
+                    TextStrokeTransparency = 0.5;
+                    BorderColor3 = rgb(0, 0, 0);
+                    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
+                    Name = "\0";
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    AnchorPoint = vec2(0, 0.5);
+                    BorderSizePixel = 0;
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 0, 0.5, 0);
+                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+                    ZIndex = 1;
+                    TextSize = 20;
+                    BackgroundColor3 = rgb(255, 255, 255)
+                });	Library:Themify(Items.SectionTitleGlow, "accent", "TextStrokeColor3")
+
+                Library:Create( "UIPadding" , {
+                    Parent = Items.SectionTitleGlow;
+                    PaddingRight = dim(0, 8);
+                    PaddingLeft = dim(0, 13)
+                });
+
                 Items.SectionTitle = Library:Create( "TextLabel" , {
                     RichText = true;
                     Parent = Items.TitleHolder;
@@ -1520,6 +1558,24 @@ function Cfg.ToggleMenu(bool)
                         BackgroundColor3 = themes.preset.visible_backgrounds
                     });	Library:Themify(Items.Holder, "visible_backgrounds", "BackgroundColor3")
                     
+                    Items.IconGlow = Library:Create( "ImageLabel" , {
+                        ImageColor3 = themes.preset.accent;
+                        ImageTransparency = 1;
+                        BorderColor3 = rgb(0, 0, 0);
+                        Parent = Items.Holder;
+                        Name = "\0";
+                        AnchorPoint = vec2(0.5, 0.5);
+                        Image = "rbxassetid://18245826428";
+                        ScaleType = Enum.ScaleType.Slice;
+                        SliceCenter = rect(vec2(21, 21), vec2(79, 79));
+                        BackgroundTransparency = 1;
+                        Position = dim2(0, 15, 0.5, 0);
+                        Size = dim2(0, 28, 0, 28);
+                        BorderSizePixel = 0;
+                        BackgroundColor3 = rgb(255, 255, 255);
+                        ZIndex = 0;
+                    });	Library:Themify(Items.IconGlow, "accent", "ImageColor3")
+
                     Items.Icon = Library:Create( "ImageLabel" , {
                         ImageColor3 = themes.preset.deselected;
                         BorderColor3 = rgb(0, 0, 0);
@@ -1531,7 +1587,8 @@ function Cfg.ToggleMenu(bool)
                         Position = dim2(0, 8, 0.5, 0);
                         Size = dim2(0, 14, 0, 14);
                         BorderSizePixel = 0;
-                        BackgroundColor3 = rgb(255, 255, 255)
+                        BackgroundColor3 = rgb(255, 255, 255);
+                        ZIndex = 2;
                     });	Library:Themify(Items.Icon, "deselected", "ImageColor3"); Library:Themify(Items.Icon, "accent", "ImageColor3")
                     
                     Items.SectionTitle = Library:Create( "TextLabel" , {
@@ -1657,6 +1714,10 @@ function Cfg.ToggleMenu(bool)
                     Library:Tween(Tab.Icon, {ImageColor3 = themes.preset.deselected})
                     Library:Tween(Tab.SectionTitle, {TextColor3 = themes.preset.deselected})
 
+                    if Tab.IconGlow then
+                        Library:Tween(Tab.IconGlow, {ImageTransparency = 1})
+                    end
+
                     Tab.Pages.Visible = false
                     Tab.Pages.Parent = Library.Other
                 end
@@ -1668,6 +1729,8 @@ function Cfg.ToggleMenu(bool)
                 Library:Tween(Items.Holder, {BackgroundTransparency = 0})
                 Library:Tween(Items.Icon, {ImageColor3 = themes.preset.accent})
                 Library:Tween(Items.SectionTitle, {TextColor3 = themes.preset.text_color})
+
+                Library:Tween(Items.IconGlow, {ImageTransparency = 0.35})
 
                 Items.Pages.Parent = self.Items.Pages;
                 Items.Pages.Visible = true
