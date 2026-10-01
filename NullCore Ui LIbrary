@@ -1,4 +1,4 @@
---
+-- Library
 
 if getgenv().Library then
     getgenv().Library:Unload()
@@ -170,12 +170,12 @@ local Library do
 
     local Themes = {
         ["Preset"] = {
-            ["Background"] = FromRGB(16, 18, 18),
-            ["Inline"] = FromRGB(21, 24, 24),
-            ["Element"] = FromRGB(30, 34, 34),
-            ["Accent"] = FromRGB(255, 255, 255),
+            ["Background"] = FromRGB(0, 0, 0),
+            ["Inline"] = FromRGB(01, 0, 0),
+            ["Element"] = FromRGB(20, 20, 20),
+            ["Accent"] = FromRGB(204, 197, 8),
             ["Border"] = FromRGB(30, 34, 34),
-            ["Border 2"] = FromRGB(56, 62, 62)
+            ["Border 2"] = FromRGB(20, 20, 20)
         }
     }
 
@@ -359,56 +359,63 @@ local Library do
             self = nil
         end
 
-        Instances.MakeDraggable = function(self)
-            if not self.Instance then 
+Instances.MakeDraggable = function(self)
+    if not self.Instance then 
+        return
+    end
+
+    local Gui = self.Instance
+
+    local Dragging = false 
+    local DragStart
+    local StartPosition 
+
+    local Set = function(Input)
+        local DragDelta = Input.Position - DragStart
+
+        local ViewportSize = Workspace.CurrentCamera.ViewportSize
+        local GuiSize = Gui.AbsoluteSize
+
+        local NewX = MathClamp(StartPosition.X.Offset + DragDelta.X, 0, ViewportSize.X - GuiSize.X)
+        local NewY = MathClamp(StartPosition.Y.Offset + DragDelta.Y, 0, ViewportSize.Y - GuiSize.Y)
+
+        self:Tween(TweenInfo.new(0.16, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(0, NewX, 0, NewY)})
+    end
+
+    local InputChanged
+
+    self:Connect("InputBegan", function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+
+            DragStart = Input.Position
+            StartPosition = Gui.Position
+
+            if InputChanged then 
                 return
             end
 
-            local Gui = self.Instance
+            InputChanged = Input.Changed:Connect(function()
+                if Input.UserInputState == Enum.UserInputState.End then
+                    Dragging = false
 
-            local Dragging = false 
-            local DragStart
-            local StartPosition 
-
-            local Set = function(Input)
-                local DragDelta = Input.Position - DragStart
-                self:Tween(TweenInfo.new(0.16, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(StartPosition.X.Scale, StartPosition.X.Offset + DragDelta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + DragDelta.Y)})
-            end
-
-            local InputChanged
-
-            self:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    Dragging = true
-
-                    DragStart = Input.Position
-                    StartPosition = Gui.Position
-
-                    if InputChanged then 
-                        return
-                    end
-
-                    InputChanged = Input.Changed:Connect(function()
-                        if Input.UserInputState == Enum.UserInputState.End then
-                            Dragging = false
-
-                            InputChanged:Disconnect()
-                            InputChanged = nil
-                        end
-                    end)
+                    InputChanged:Disconnect()
+                    InputChanged = nil
                 end
             end)
-
-            Library:Connect(UserInputService.InputChanged, function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
-                    if Dragging then
-                        Set(Input)
-                    end
-                end
-            end)
-
-            return Dragging
         end
+    end)
+
+    Library:Connect(UserInputService.InputChanged, function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
+            if Dragging then
+                Set(Input)
+            end
+        end
+    end)
+
+    return Dragging
+end
 
         Instances.MakeResizeable = function(self, Minimum, Maximum)
             if not self.Instance then 
@@ -461,18 +468,19 @@ local Library do
                 end
             end)
 
-            Library:Connect(UserInputService.InputChanged, function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
-                    if Resizing then
-                        ResizeMax = Maximum or Gui.Parent.AbsoluteSize - Gui.AbsoluteSize
+Library:Connect(UserInputService.InputChanged, function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
+        if Resizing then
+            local ViewportSize = Workspace.CurrentCamera.ViewportSize
+            ResizeMax = Vector2New(ViewportSize.X - Gui.AbsolutePosition.X, ViewportSize.Y - Gui.AbsolutePosition.Y)
 
-                        Delta = Start + UDim2New(0, Input.Position.X, 0, Input.Position.Y)
-                        Delta = UDim2New(0, math.clamp(Delta.X.Offset, Minimum.X, ResizeMax.X), 0, math.clamp(Delta.Y.Offset, Minimum.Y, ResizeMax.Y))
+            Delta = Start + UDim2New(0, Input.Position.X, 0, Input.Position.Y)
+            Delta = UDim2New(0, math.clamp(Delta.X.Offset, Minimum.X, ResizeMax.X), 0, math.clamp(Delta.Y.Offset, Minimum.Y, ResizeMax.Y))
 
-                        Tween:Create(Gui, TweenInfo.new(0.17, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = Delta}, true)
-                    end
-                end
-            end)
+            Tween:Create(Gui, TweenInfo.new(0.17, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = Delta}, true)
+        end
+    end
+end)
 
             return Resizing
         end
@@ -1849,7 +1857,7 @@ local Library do
 
             local Window = {
                 Name = Data.Name or Data.name or "Window",
-                SubTitle = Data.SubTitle or Data.subtitle or "for PUBG",
+                SubTitle = Data.SubTitle or Data.subtitle or "South Bronx",
                 ExpiresIn = Data.ExpiresIn or Data.expiresin or "23d",
                 
                 Pages = { },
@@ -1920,7 +1928,7 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     Size = UDim2New(0, 40, 0, 40),
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(207, 207, 207)
+                    BackgroundColor3 = FromRGB(0, 0, 0)
                 })
                 
                 Instances:Create("UICorner", {
@@ -1936,21 +1944,22 @@ local Library do
                     ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 }):AddToTheme({Color = "Border"})
                 
-                Items["Text"] = Instances:Create("TextLabel", {
-                    Parent = Items["Background"].Instance,
-                    Name = "\0",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(0, 0, 0),
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    Text = FirstLetterOfName,
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    BackgroundTransparency = 1,
-                    Position = UDim2New(0.5, 0, 0.5, 0),
-                    Size = UDim2New(1, -10, 1, -10),
-                    BorderSizePixel = 0,
-                    TextSize = 22,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
+Items["Text"] = Instances:Create("TextLabel", {
+    Parent = Items["Background"].Instance,
+    Name = "\0",
+    FontFace = Library.Font,
+    TextColor3 = FromRGB(255, 255, 255),
+    BorderColor3 = FromRGB(0, 0, 0),
+    Text = `<font color="rgb(204, 197, 8)">N</font><font color="rgb(255, 255, 255)">C</font>`,
+    RichText = true,
+    AnchorPoint = Vector2New(0.5, 0.5),
+    BackgroundTransparency = 1,
+    Position = UDim2New(0.5, 0, 0.5, 0),
+    Size = UDim2New(1, -10, 1, -10),
+    BorderSizePixel = 0,
+    TextSize = 19,
+    BackgroundColor3 = FromRGB(255, 255, 255)
+})
                 
                 Items["RealTitle"] = Instances:Create("TextLabel", {
                     Parent = Items["Title"].Instance,
@@ -2062,7 +2071,7 @@ local Library do
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(255, 255, 255),
                     TextTransparency = 0.5,
-                    Text = "Sub expires in "..Window.ExpiresIn,
+                    Text = "discord.gg/vnhUaeHZZy",
                     Size = UDim2New(0, 0, 0, 15),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
@@ -3948,14 +3957,16 @@ local Library do
     end
 end
 
-local Window = Library:Window({Name = "Balright"})
+local Window = Library:Window({Name = "NullCore"})
 
-Window:Category("penis")
-local CombatPage = Window:Page({Name = "Page", Icon = "136879043989014"})
-Window:Page({Name = "Page", Icon = "136879043989014"})
-Window:Page({Name = "Page", Icon = "136879043989014"})
+Window:Category("Features")
+local CombatPage = Window:Page({Name = "Main", Icon = "109841253338329"})
+Window:Page({Name = "Visuals", Icon = "10723346959"})
+Window:Page({Name = "Combat", Icon = "10734975692"})
+Window:Page({Name = "Miscellaneous", Icon = "92373371786861"})
+Window:Page({Name = "Players", Icon = "132776928710277"})
 
-local CombatSubPage = CombatPage:SubPage({Name = "Combat"})
+local CombatSubPage = CombatPage:SubPage({Name = "Local"})
 CombatPage:SubPage({Name = "Weapon"})
 CombatPage:SubPage({Name = "FoV"})
 
@@ -3994,8 +4005,7 @@ for Index = 1, 2 do
     end})
 end
 
-Library:Notification("Notification without icon", 5, nil)
-Library:Notification("Notification with icon lol noob", 5, "94627324690861")
+Library:Notification("Script loaded successfully")
 
 getgenv().Library = Library
 return Library
