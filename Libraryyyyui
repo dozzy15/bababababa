@@ -1214,55 +1214,29 @@ function Library:Window(properties)
                     BackgroundColor3 = themes.preset.inline
                 });	Library:Themify(Items.Filler, "inline", "BackgroundColor3")
                 
-                Items.TitleGlowContainer = Library:Create( "Frame" , {
+                Items.SectionTitleGlow = Library:Create( "TextLabel" , {
+                    RichText = true;
                     Parent = Items.TitleHolder;
-                    BackgroundTransparency = 1;
-                    Name = "\0";
-                    AnchorPoint = vec2(0, 0.5);
-                    Position = dim2(0, 0, 0.5, 0);
-                    Size = dim2(0, 0, 0, 0);
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    BorderSizePixel = 0;
+                    TextColor3 = themes.preset.accent;
+                    TextTransparency = 1;
+                    TextStrokeColor3 = themes.preset.accent;
+                    TextStrokeTransparency = 0.5;
                     BorderColor3 = rgb(0, 0, 0);
+                    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
+                    Name = "\0";
+                    AutomaticSize = Enum.AutomaticSize.XY;
+                    AnchorPoint = vec2(0, 0.5);
+                    BorderSizePixel = 0;
+                    BackgroundTransparency = 1;
+                    Position = dim2(0, 0, 0.5, 0);
+                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
                     ZIndex = 1;
+                    TextSize = 20;
                     BackgroundColor3 = rgb(255, 255, 255)
-                });
-
-                Items.TitleGlow = {}
-                for _, offset in ipairs({
-                    Vector2.new(-1, 0),
-                    Vector2.new(1, 0),
-                    Vector2.new(0, -1),
-                    Vector2.new(0, 1),
-                    Vector2.new(-1, -1),
-                    Vector2.new(1, -1),
-                    Vector2.new(-1, 1),
-                    Vector2.new(1, 1),
-                }) do
-                    local glow = Library:Create( "TextLabel" , {
-                        RichText = true;
-                        Parent = Items.TitleGlowContainer;
-                        TextColor3 = themes.preset.accent;
-                        TextTransparency = 0.55;
-                        BorderColor3 = rgb(0, 0, 0);
-                        Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
-                        Name = "\0";
-                        AutomaticSize = Enum.AutomaticSize.XY;
-                        AnchorPoint = vec2(0, 0.5);
-                        Position = dim2(0, offset.X, 0.5, offset.Y);
-                        BorderSizePixel = 0;
-                        BackgroundTransparency = 1;
-                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-                        ZIndex = 1;
-                        TextSize = 20;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    })
-                    Library:Themify(glow, "accent", "TextColor3")
-                    table.insert(Items.TitleGlow, glow)
-                end
+                });	Library:Themify(Items.SectionTitleGlow, "accent", "TextStrokeColor3")
 
                 Library:Create( "UIPadding" , {
-                    Parent = Items.TitleGlowContainer;
+                    Parent = Items.SectionTitleGlow;
                     PaddingRight = dim(0, 8);
                     PaddingLeft = dim(0, 13)
                 });
