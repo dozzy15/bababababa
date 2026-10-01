@@ -1,6 +1,4 @@
--- made by samet (joestar._3 on discord)
--- https://discord.gg/VhvTd5HV8d
--- example at bottom
+--
 
 if getgenv().Library then
     getgenv().Library:Unload()
