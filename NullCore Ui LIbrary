@@ -39,7 +39,7 @@ local isMobile = InputService.TouchEnabled
             window_outline = rgb(0, 0, 0),
             inline = rgb(25, 27, 27),
             background = rgb(17, 19, 19),
-            visible_backgrounds = rgb(20, 23, 22),
+            visible_backgrounds = rgb(18, 20, 19),
             text_color = rgb(221, 223, 222),
             glow = rgb(0, 0, 0),
             deselected = rgb(89, 91, 91),
@@ -1204,89 +1204,114 @@ function Library:Window(properties)
                     BackgroundColor3 = rgb(255, 255, 255)
                 });	
                 
-                Items.Filler = Library:Create( "Frame" , {
-                    Parent = Items.TitleHolder;
-                    Name = "\0";
-                    Position = dim2(0, 0, 1, -1);
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(1, 0, 0, 1);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = themes.preset.inline
-                });	Library:Themify(Items.Filler, "inline", "BackgroundColor3")
-                
-                Items.SectionTitleGlow = Library:Create( "TextLabel" , {
-                    RichText = true;
-                    Parent = Items.TitleHolder;
-                    TextColor3 = themes.preset.accent;
-                    TextTransparency = 1;
-                    TextStrokeColor3 = themes.preset.accent;
-                    TextStrokeTransparency = 0.5;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
-                    Name = "\0";
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    AnchorPoint = vec2(0, 0.5);
-                    BorderSizePixel = 0;
-                    BackgroundTransparency = 1;
-                    Position = dim2(0, 0, 0.5, 0);
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-                    ZIndex = 1;
-                    TextSize = 20;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });	Library:Themify(Items.SectionTitleGlow, "accent", "TextStrokeColor3")
+Items.Filler = Library:Create( "Frame" , {
+    Parent = Items.TitleHolder;
+    Name = "\0";
+    Position = dim2(0, 0, 1, -1);
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 0, 0, 1);
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.inline
+});	Library:Themify(Items.Filler, "inline", "BackgroundColor3")
 
-                Library:Create( "UIPadding" , {
-                    Parent = Items.SectionTitleGlow;
-                    PaddingRight = dim(0, 8);
-                    PaddingLeft = dim(0, 13)
-                });
+Items.TitleGlowBox = Library:Create( "ImageLabel" , {
+    ImageColor3 = themes.preset.accent;
+    ImageTransparency = 1;
+    ScaleType = Enum.ScaleType.Slice;
+    SliceCenter = rect(vec2(21, 21), vec2(79, 79));
+    Image = "rbxassetid://18245826428";
+    Parent = Items.TitleHolder;
+    Name = "\0";
+    AnchorPoint = vec2(0, 0.5);
+    Position = dim2(0, -10, 0.5, 0);
+    Size = dim2(0, 0, 0, 60);
+    AutomaticSize = Enum.AutomaticSize.X;
+    BorderSizePixel = 0;
+    BorderColor3 = rgb(0, 0, 0);
+    ZIndex = 0;
+    BackgroundTransparency = 1;
+    BackgroundColor3 = rgb(255, 255, 255)
+}); Library:Themify(Items.TitleGlowBox, "accent", "ImageColor3")
 
-                Items.SectionTitle = Library:Create( "TextLabel" , {
-                    RichText = true;
-                    Parent = Items.TitleHolder;
-                    TextColor3 = themes.preset.accent;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
-                    Name = "\0";
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    AnchorPoint = vec2(0, 0.5);
-                    BorderSizePixel = 0;
-                    BackgroundTransparency = 1;
-                    Position = dim2(0, 0, 0.5, 0);
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
-                    ZIndex = 2;
-                    TextSize = 20;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                }); Library:Themify(Items.SectionTitle, "accent", "TextColor3")
-                
-                Library:Create( "UIPadding" , {
-                    Parent = Items.SectionTitle;
-                    PaddingRight = dim(0, 8);
-                    PaddingLeft = dim(0, 13)
-                });
-                
-                Items.Pages = Library:Create( "Frame" , {
-                    Parent = Items.PageHolder;
-                    Name = "\0";
-                    BackgroundTransparency = 1;
-                    Position = dim2(0, 0, 0, 43);
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(1, 0, 1, -43);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });	
+Items.SectionTitleGlow = Library:Create( "TextLabel" , {
+    RichText = true;
+    Parent = Items.TitleHolder;
+    TextColor3 = themes.preset.accent;
+    TextTransparency = 1;
+    TextStrokeColor3 = themes.preset.accent;
+    TextStrokeTransparency = 1;
+    BorderColor3 = rgb(0, 0, 0);
+    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
+    Name = "\0";
+    AutomaticSize = Enum.AutomaticSize.XY;
+    AnchorPoint = vec2(0, 0.5);
+    BorderSizePixel = 0;
+    BackgroundTransparency = 1;
+    Position = dim2(0, 0, 0.5, 0);
+    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal);
+    ZIndex = 1;
+    TextSize = 22;
+    BackgroundColor3 = rgb(255, 255, 255)
+}); Library:Themify(Items.SectionTitleGlow, "accent", "TextStrokeColor3")
 
-                Items.Fade = Library:Create( "Frame" , {
-                    Name = "\0";
-                    BackgroundTransparency = 1;
-                    Parent = Items.Pages;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(1, 0, 1, 0);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(17, 19, 19);
-                    ZIndex = 2;
-                });	Library:Themify(Items.Fade, "background", "BackgroundColor3")                
-                
+Library:Create( "UIPadding" , {
+    Parent = Items.SectionTitleGlow;
+    PaddingRight = dim(0, 8);
+    PaddingLeft = dim(0, 13)
+});
+
+Items.SectionTitle = Library:Create( "TextLabel" , {
+    RichText = true;
+    Parent = Items.TitleHolder;
+    TextColor3 = themes.preset.accent;
+    BorderColor3 = rgb(0, 0, 0);
+    Text = '<font color = "rgb(255,255,255)">' .. Cfg.Prefix .. '</font>' .. Cfg.Suffix .. '';
+    Name = "\0";
+    AutomaticSize = Enum.AutomaticSize.XY;
+    AnchorPoint = vec2(0, 0.5);
+    BorderSizePixel = 0;
+    BackgroundTransparency = 1;
+    Position = dim2(0, 0, 0.5, 0);
+    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal);
+    ZIndex = 2;
+    TextSize = 22;
+    BackgroundColor3 = rgb(255, 255, 255)
+}); Library:Themify(Items.SectionTitle, "accent", "TextColor3")
+
+Library:Create( "UIPadding" , {
+    Parent = Items.SectionTitle;
+    PaddingRight = dim(0, 8);
+    PaddingLeft = dim(0, 13)
+});
+
+Items.SectionTitle:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+    Items.TitleGlowBox.Size = dim2(0, Items.SectionTitle.AbsoluteSize.X + 20, 0, 40)
+end)
+
+Items.TitleGlowBox.Size = dim2(0, Items.SectionTitle.AbsoluteSize.X + 20, 0, 40)
+
+Items.Pages = Library:Create( "Frame" , {
+    Parent = Items.PageHolder;
+    Name = "\0";
+    BackgroundTransparency = 1;
+    Position = dim2(0, 0, 0, 43);
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 0, 1, -43);
+    BorderSizePixel = 0;
+    BackgroundColor3 = rgb(255, 255, 255)
+});	
+
+Items.Fade = Library:Create( "Frame" , {
+    Name = "\0";
+    BackgroundTransparency = 1;
+    Parent = Items.Pages;
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 0, 1, 0);
+    BorderSizePixel = 0;
+    BackgroundColor3 = rgb(17, 19, 19);
+    ZIndex = 2;
+});	Library:Themify(Items.Fade, "background", "BackgroundColor3")                
+
 Items.KeybindList = Library:Create("Frame", {
     Parent = Library.Items;
     Name = "\0";
@@ -2527,18 +2552,46 @@ end
                     SortOrder = Enum.SortOrder.LayoutOrder
                 });
                 
-                Items.ToggleComponent = Library:Create( "Frame" , {
-                    Name = "\0";
-                    Parent = Items.Components;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Size = dim2(0, 29, 0, 14);
-                    BorderSizePixel = 0;
-                    BackgroundColor3 = rgb(26, 28, 28)
-                });
-                
-                Library:Create( "UICorner" , {
-                    Parent = Items.ToggleComponent
-                });
+Items.ToggleWrap = Library:Create( "Frame" , {
+    Name = "\0";
+    Parent = Items.Components;
+    BackgroundTransparency = 1;
+    Size = dim2(0, 31, 0, 16);
+    BorderSizePixel = 0;
+    BackgroundColor3 = rgb(255, 255, 255)
+});
+
+Items.ToggleGlow = Library:Create( "ImageLabel" , {
+    ImageColor3 = rgb(0, 0, 0);
+    ImageTransparency = 0.6;
+    ScaleType = Enum.ScaleType.Slice;
+    SliceCenter = rect(vec2(21, 21), vec2(79, 79));
+    Image = "rbxassetid://18245826428";
+    Parent = Items.ToggleWrap;
+    Name = "\0";
+    AnchorPoint = vec2(0.5, 0.5);
+    Position = dim2(0.5, 0, 0.5, 0);
+    Size = dim2(1, 20, 1, 20);
+    BorderSizePixel = 0;
+    BorderColor3 = rgb(0, 0, 0);
+    ZIndex = 0;
+    BackgroundTransparency = 1;
+    BackgroundColor3 = rgb(255, 255, 255)
+});
+
+Items.ToggleComponent = Library:Create( "Frame" , {
+    Name = "\0";
+    Parent = Items.ToggleWrap;
+    BorderColor3 = rgb(0, 0, 0);
+    Size = dim2(1, 0, 1, 0);
+    BorderSizePixel = 0;
+    ZIndex = 1;
+    BackgroundColor3 = rgb(26, 28, 28)
+});
+
+Library:Create( "UICorner" , {
+    Parent = Items.ToggleComponent
+});
                 
                 Items.Inline = Library:Create( "Frame" , {
                     Parent = Items.ToggleComponent;
@@ -2576,15 +2629,20 @@ end
                 });                
             end;
             
-            function Cfg.Set(bool)
-                Flags[Cfg.Flag] = bool
+function Cfg.Set(bool)
+    Flags[Cfg.Flag] = bool
 
-                Cfg.Callback(bool)
+    Cfg.Callback(bool)
 
-                Library:Tween(Items.ToggleComponent, {BackgroundColor3 = bool and themes.preset.accent or themes.preset.inline})
-                Library:Tween(Items.Inline, {BackgroundColor3 = bool and themes.preset.accent or themes.preset.background})
-                Library:Tween(Items.Circle, {BackgroundColor3 = bool and rgb(255, 255, 255) or themes.preset.deselected, Position = bool and dim2(1, -10, 0.5, 0) or dim2(0, 2, 0.5, 0)})                
-            end
+    Library:Tween(Items.ToggleComponent, {BackgroundColor3 = bool and themes.preset.accent or themes.preset.inline})
+    Library:Tween(Items.Inline, {BackgroundColor3 = bool and themes.preset.accent or themes.preset.background})
+    Library:Tween(Items.Circle, {BackgroundColor3 = bool and rgb(255, 255, 255) or themes.preset.deselected, Position = bool and dim2(1, -10, 0.5, 0) or dim2(0, 2, 0.5, 0)})
+
+    Library:Tween(Items.ToggleGlow, {
+        ImageColor3 = bool and themes.preset.accent or rgb(0, 0, 0),
+        ImageTransparency = bool and 0.35 or 0.6
+    })
+end
             
             Items.Toggle.MouseButton1Click:Connect(function()
                 Cfg.Enabled = not Cfg.Enabled
@@ -3559,7 +3617,7 @@ end
                     AutoButtonColor = false;
                     Name = "\0";
                     Parent = Items.Button;
-                    Size = dim2(1, 0, 0, 20);
+                    Size = dim2(1, 0, 0, 35);
                     Selectable = false;
                     BorderSizePixel = 0;
                     BackgroundColor3 = rgb(26, 28, 28)
