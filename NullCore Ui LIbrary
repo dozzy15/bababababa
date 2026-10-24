@@ -2815,273 +2815,381 @@ end)
             return setmetatable(Cfg, Library)
         end 
 
-        function Library:Dropdown(properties) 
-            local Cfg = {
-                Name = properties.Name or nil;
-                Flag = properties.Flag or properties.Name or "Dropdown";
-                Options = properties.Options or {""};
-                Callback = properties.Callback or function() end;
-                Multi = properties.Multi or false;
-                Scrolling = properties.Scrolling or false;
+function Library:Dropdown(properties) 
+    local Cfg = {
+        Name = properties.Name or nil;
+        Flag = properties.Flag or properties.Name or "Dropdown";
+        Options = properties.Options or {""};
+        Callback = properties.Callback or function() end;
+        Multi = properties.Multi or false;
+        Scrolling = properties.Scrolling or false;
+        MaxHeight = properties.MaxHeight or (8 * 24);
 
-                -- Ignore these 
-                Open = false;
-                OptionInstances = {};
-                MultiItems = {};
-                Items = {};
-                Tweening = false;
-                Ignore = properties.Ignore or false;
-            }   
+        Open = false;
+        OptionInstances = {};
+        MultiItems = {};
+        Items = {};
+        Tweening = false;
+        Query = "";
+        Ignore = properties.Ignore or false;
+    }   
 
-            Cfg.Default = properties.Default or (Cfg.Multi and {Cfg.Items[1]}) or Cfg.Items[1] or "None"
-            Flags[Cfg.Flag] = Cfg.Default
-            
-            local Items = Cfg.Items; do 
-                -- Element
-                    Items.Dropdown = Library:Create( "Frame" , {
-                        Parent = self.Items.Elements;
-                        Name = "\0";
-                        BackgroundTransparency = 1;
-                        Size = dim2(1, 0, 0, 0);
-                        BorderColor3 = rgb(0, 0, 0);
-                        BorderSizePixel = 0;
-                        AutomaticSize = Enum.AutomaticSize.Y;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });
-                    
-                    Items.Title = Library:Create( "TextLabel" , {
-                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                        TextColor3 = themes.preset.text_color;
-                        BorderColor3 = rgb(0, 0, 0);
-                        Text = Cfg.Name;
-                        Parent = Items.Dropdown;
-                        Name = "\0";
-                        BackgroundTransparency = 1;
-                        RichText = true;
-                        AutomaticSize = Enum.AutomaticSize.XY;
-                        BorderSizePixel = 0;
-                        ZIndex = 2;
-                        TextSize = 14;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });	Library:Themify(Items.Title, "text_color", "BackgroundColor3")
-                    
-                    Items.Outline = Library:Create( "TextButton" , {
-                        Active = false;
-                        BorderColor3 = rgb(0, 0, 0);
-                        Text = "";
-                        AutoButtonColor = false;
-                        Parent = Items.Dropdown;
-                        Name = "\0";
-                        Position = dim2(0, 0, 0, 21);
-                        Size = dim2(1, 0, 0, 20);
-                        Selectable = false;
-                        BorderSizePixel = 0;
-                        BackgroundColor3 = themes.preset.inline
-                    });	Library:Themify(Items.Outline, "inline", "BackgroundColor3")
-                    
-                    Items.Inline = Library:Create( "Frame" , {
-                        Parent = Items.Outline;
-                        Name = "\0";
-                        Position = dim2(0, 1, 0, 1);
-                        BorderColor3 = rgb(0, 0, 0);
-                        Size = dim2(1, -2, 1, -2);
-                        BorderSizePixel = 0;
-                        BackgroundColor3 = rgb(31, 31, 31)
-                    });
-                    
-                    Items.Arrow = Library:Create( "ImageLabel" , {
-                        ImageColor3 = rgb(219, 222, 221);
-                        BorderColor3 = rgb(0, 0, 0);
-                        Parent = Items.Inline;
-                        Name = "\0";
-                        AnchorPoint = vec2(0, 0.5);
-                        Image = "rbxassetid://70449495580650";
-                        BackgroundTransparency = 1;
-                        Position = dim2(1, -15, 0.5, 0);
-                        Size = dim2(0, 11, 0, 9);
-                        BorderSizePixel = 0;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });
-                    
-                    Items.InnerText = Library:Create( "TextLabel" , {
-                        FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                        TextColor3 = themes.preset.text_color;
-                        BorderColor3 = rgb(0, 0, 0);
-                        Text = "Option1, Option2, Option3";
-                        Parent = Items.Inline;
-                        Name = "\0";
-                        AnchorPoint = vec2(0, 0.5);
-                        AutomaticSize = Enum.AutomaticSize.XY;
-                        BackgroundTransparency = 1;
-                        Position = dim2(0, 4, 0.5, 1);
-                        BorderSizePixel = 0;
-                        ZIndex = 2;
-                        TextSize = 14;
-                        BackgroundColor3 = rgb(255, 255, 255)
-                    });	Library:Themify(Items.InnerText, "text_color", "BackgroundColor3")                
-                -- 
-                
-                -- Element Holder
-                    Items.DropdownElements = Library:Create( "Frame" , {
-                        Parent = Library.Other;
-                        Size = dim2(0, 211, 0, 20);
-                        Name = "\0";
-                        Position = dim2(0, 0, 0, 21);
-                        BorderColor3 = rgb(0, 0, 0);
-                        BorderSizePixel = 0;
-                        AutomaticSize = Enum.AutomaticSize.Y;
-                        BackgroundColor3 = themes.preset.inline
-                    });	Library:Themify(Items.DropdownElements, "inline", "BackgroundColor3")
-                    
-                    Items.DropdownHolder = Library:Create( "Frame" , {
-                        Parent = Items.DropdownElements;
-                        Size = dim2(1, -2, 1, -2);
-                        Name = "\0";
-                        Position = dim2(0, 1, 0, 1);
-                        BorderColor3 = rgb(0, 0, 0);
-                        BorderSizePixel = 0;
-                        AutomaticSize = Enum.AutomaticSize.Y;
-                        BackgroundColor3 = rgb(31, 31, 31)
-                    });
-                    
-                    Library:Create( "UIListLayout" , {
-                        Parent = Items.DropdownHolder;
-                        SortOrder = Enum.SortOrder.LayoutOrder
-                    });
-                    
-                    Library:Create( "UIPadding" , {
-                        PaddingBottom = dim(0, 2);
-                        Parent = Items.DropdownElements
-                    });                        
-                -- 
-            end 
+    Cfg.Default = properties.Default or (Cfg.Multi and {Cfg.Items[1]}) or Cfg.Items[1] or "None"
+    Flags[Cfg.Flag] = Cfg.Default
+    
+    local Items = Cfg.Items; do 
+        Items.Dropdown = Library:Create( "Frame" , {
+            Parent = self.Items.Elements;
+            Name = "\0";
+            BackgroundTransparency = 1;
+            Size = dim2(1, 0, 0, 0);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            AutomaticSize = Enum.AutomaticSize.Y;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });
+        
+        Items.Title = Library:Create( "TextLabel" , {
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+            TextColor3 = themes.preset.text_color;
+            BorderColor3 = rgb(0, 0, 0);
+            Text = Cfg.Name;
+            Parent = Items.Dropdown;
+            Name = "\0";
+            BackgroundTransparency = 1;
+            RichText = true;
+            AutomaticSize = Enum.AutomaticSize.XY;
+            BorderSizePixel = 0;
+            ZIndex = 2;
+            TextSize = 14;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });	Library:Themify(Items.Title, "text_color", "BackgroundColor3")
+        
+        Items.Outline = Library:Create( "TextButton" , {
+            Active = false;
+            BorderColor3 = rgb(0, 0, 0);
+            Text = "";
+            AutoButtonColor = false;
+            Parent = Items.Dropdown;
+            Name = "\0";
+            Position = dim2(0, 0, 0, 21);
+            Size = dim2(1, 0, 0, 20);
+            Selectable = false;
+            BorderSizePixel = 0;
+            BackgroundColor3 = themes.preset.inline
+        });	Library:Themify(Items.Outline, "inline", "BackgroundColor3")
+        
+        Items.Inline = Library:Create( "Frame" , {
+            Parent = Items.Outline;
+            Name = "\0";
+            Position = dim2(0, 1, 0, 1);
+            BorderColor3 = rgb(0, 0, 0);
+            Size = dim2(1, -2, 1, -2);
+            BorderSizePixel = 0;
+            BackgroundColor3 = rgb(31, 31, 31)
+        });
+        
+        Items.Arrow = Library:Create( "ImageLabel" , {
+            ImageColor3 = rgb(219, 222, 221);
+            BorderColor3 = rgb(0, 0, 0);
+            Parent = Items.Inline;
+            Name = "\0";
+            AnchorPoint = vec2(0, 0.5);
+            Image = "rbxassetid://70449495580650";
+            BackgroundTransparency = 1;
+            Position = dim2(1, -15, 0.5, 0);
+            Size = dim2(0, 11, 0, 9);
+            BorderSizePixel = 0;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });
+        
+        Items.InnerText = Library:Create( "TextLabel" , {
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+            TextColor3 = themes.preset.text_color;
+            BorderColor3 = rgb(0, 0, 0);
+            Text = "Option1, Option2, Option3";
+            Parent = Items.Inline;
+            Name = "\0";
+            AnchorPoint = vec2(0, 0.5);
+            AutomaticSize = Enum.AutomaticSize.XY;
+            BackgroundTransparency = 1;
+            Position = dim2(0, 4, 0.5, 1);
+            BorderSizePixel = 0;
+            ZIndex = 2;
+            TextSize = 14;
+            BackgroundColor3 = rgb(255, 255, 255)
+        });	Library:Themify(Items.InnerText, "text_color", "BackgroundColor3")                
+        
+        Items.DropdownElements = Library:Create( "Frame" , {
+            Parent = Library.Other;
+            Size = dim2(0, 211, 0, Cfg.MaxHeight + 36);
+            Name = "\0";
+            Position = dim2(0, 0, 0, 21);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            BackgroundColor3 = themes.preset.inline;
+            ClipsDescendants = true;
+        });	Library:Themify(Items.DropdownElements, "inline", "BackgroundColor3")
+        
+        Items.DropdownHolder = Library:Create( "Frame" , {
+            Parent = Items.DropdownElements;
+            Size = dim2(1, -2, 1, -2);
+            Name = "\0";
+            Position = dim2(0, 1, 0, 1);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            BackgroundColor3 = rgb(31, 31, 31)
+        });
+        
+        Items.SearchFrame = Library:Create( "Frame" , {
+            Parent = Items.DropdownHolder;
+            Name = "\0";
+            Position = dim2(0, 2, 0, 2);
+            Size = dim2(1, -4, 0, 22);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            BackgroundColor3 = themes.preset.inline;
+            ZIndex = 3;
+        });	Library:Themify(Items.SearchFrame, "inline", "BackgroundColor3")
 
-            function Cfg.RenderOption(text)
-                local Button = Library:Create( "TextButton" , {
-                    Parent = Items.DropdownHolder;
-                    AutoButtonColor = false;
-                    FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                    Name = "\0";
-                    TextColor3 = themes.preset.deselected;
-                    BorderColor3 = rgb(0, 0, 0);
-                    Text = text;
-                    AutomaticSize = Enum.AutomaticSize.XY;
-                    Size = dim2(1, 0, 0, 0);
-                    AnchorPoint = vec2(0, 0.5);
-                    Position = dim2(0, 4, 0.5, 1);
-                    BackgroundTransparency = 1;
-                    TextXAlignment = Enum.TextXAlignment.Left;
-                    BorderSizePixel = 0;
-                    ZIndex = 2;
-                    TextSize = 14;
-                    BackgroundColor3 = rgb(255, 255, 255)
-                });	Library:Themify(Button, "deselected", "TextColor3")
-                
-                Library:Create( "UIPadding" , {
-                    PaddingTop = dim(0, 4);
-                    PaddingBottom = dim(0, 4);
-                    Parent = Button;
-                    PaddingRight = dim(0, 4);
-                    PaddingLeft = dim(0, 4)
-                });                   
+        Library:Create( "UICorner" , {
+            Parent = Items.SearchFrame;
+            CornerRadius = dim(0, 4);
+        });
 
-                table.insert(Cfg.OptionInstances, Button)
+        Items.SearchIcon = Library:Create( "ImageLabel" , {
+            Parent = Items.SearchFrame;
+            Name = "\0";
+            ScaleType = Enum.ScaleType.Fit;
+            ImageTransparency = 0.5;
+            BorderColor3 = rgb(0, 0, 0);
+            Size = dim2(0, 14, 0, 14);
+            AnchorPoint = vec2(0, 0.5);
+            Image = "rbxassetid://71924825350727";
+            BackgroundTransparency = 1;
+            Position = dim2(0, 5, 0.5, 0);
+            ZIndex = 3;
+            BorderSizePixel = 0;
+            BackgroundColor3 = rgb(255, 255, 255);
+        });	Library:Themify(Items.SearchIcon, "text_color", "ImageColor3")
 
-                return Button
+        Items.SearchBox = Library:Create( "TextBox" , {
+            Parent = Items.SearchFrame;
+            Name = "\0";
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+            TextColor3 = themes.preset.text_color;
+            PlaceholderColor3 = themes.preset.deselected;
+            PlaceholderText = "search...";
+            Text = "";
+            ClearTextOnFocus = false;
+            Size = dim2(1, -28, 1, 0);
+            Position = dim2(0, 22, 0, 0);
+            BackgroundTransparency = 1;
+            TextXAlignment = Enum.TextXAlignment.Left;
+            BorderSizePixel = 0;
+            BorderColor3 = rgb(0, 0, 0);
+            TextSize = 13;
+            ZIndex = 3;
+            BackgroundColor3 = rgb(255, 255, 255);
+        });	Library:Themify(Items.SearchBox, "text_color", "TextColor3")
+
+        Items.ScrollFrame = Library:Create( "ScrollingFrame" , {
+            Parent = Items.DropdownHolder;
+            Name = "\0";
+            Position = dim2(0, 2, 0, 28);
+            Size = dim2(1, -4, 1, -32);
+            BorderColor3 = rgb(0, 0, 0);
+            BorderSizePixel = 0;
+            BackgroundTransparency = 1;
+            CanvasSize = dim2(0, 0, 0, 0);
+            AutomaticCanvasSize = Enum.AutomaticSize.Y;
+            ScrollBarThickness = 3;
+            ScrollBarImageColor3 = themes.preset.accent;
+            ScrollingDirection = Enum.ScrollingDirection.Y;
+            ClipsDescendants = true;
+            ZIndex = 3;
+        });	Library:Themify(Items.ScrollFrame, "accent", "ScrollBarImageColor3")
+        
+        Library:Create( "UIListLayout" , {
+            Parent = Items.ScrollFrame;
+            SortOrder = Enum.SortOrder.LayoutOrder;
+            Padding = dim(0, 2);
+        });
+        
+        Library:Create( "UIPadding" , {
+            PaddingTop = dim(0, 2);
+            PaddingBottom = dim(0, 4);
+            PaddingLeft = dim(0, 2);
+            PaddingRight = dim(0, 2);
+            Parent = Items.ScrollFrame;
+        });                        
+    end 
+
+    function Cfg.RenderOption(text)
+        local Button = Library:Create( "TextButton" , {
+            Parent = Items.ScrollFrame;
+            AutoButtonColor = false;
+            FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+            Name = "\0";
+            TextColor3 = themes.preset.deselected;
+            BorderColor3 = rgb(0, 0, 0);
+            Text = text;
+            Size = dim2(1, 0, 0, 22);
+            BackgroundTransparency = 1;
+            TextXAlignment = Enum.TextXAlignment.Left;
+            BorderSizePixel = 0;
+            ZIndex = 2;
+            TextSize = 13;
+            BackgroundColor3 = rgb(255, 255, 255);
+        });	Library:Themify(Button, "deselected", "TextColor3")
+        
+        Library:Create( "UIPadding" , {
+            PaddingTop = dim(0, 3);
+            PaddingBottom = dim(0, 3);
+            Parent = Button;
+            PaddingRight = dim(0, 4);
+            PaddingLeft = dim(0, 4)
+        });                   
+
+        table.insert(Cfg.OptionInstances, Button)
+
+        return Button
+    end
+
+    function Cfg.UpdateScrollHeight()
+        local visible = 0
+        for _, btn in ipairs(Cfg.OptionInstances) do
+            if btn.Visible then
+                visible = visible + 1
             end
-            
-            function Cfg.SetVisible(bool)
-                Items.DropdownElements.Position = dim2(0, Items.Outline.AbsolutePosition.X, 0, Items.Outline.AbsolutePosition.Y + 80)
-				Items.DropdownElements.Size = dim_offset(Items.Outline.AbsoluteSize.X + 1, 0)
-                Items.DropdownElements.Visible = bool 
-                Items.DropdownElements.Parent = bool and Library.Items or Library.Other
+        end
 
-                Library:Tween(Items.Arrow, {Rotation = bool and 180 or 0})
+        local itemsHeight = math.min(visible * 24 + 6, Cfg.MaxHeight)
+        Items.ScrollFrame.Size = dim2(1, -4, 0, itemsHeight)
+        Items.DropdownElements.Size = dim2(0, Items.DropdownElements.Size.X.Offset, 0, itemsHeight + 36)
+    end
+
+    function Cfg.FilterOptions()
+        local q = string.lower(Cfg.Query or "")
+        for _, btn in ipairs(Cfg.OptionInstances) do
+            if q == "" or string.find(string.lower(btn.Text), q, 1, true) then
+                btn.Visible = true
+            else
+                btn.Visible = false
             end
-            
-            function Cfg.Set(value)
-                local Selected = {}
-                local IsTable = type(value) == "table"
+        end
+        Cfg.UpdateScrollHeight()
+    end
+    
+    function Cfg.SetVisible(bool)
+        Items.DropdownElements.Position = dim2(0, Items.Outline.AbsolutePosition.X, 0, Items.Outline.AbsolutePosition.Y + 24)
+        Items.DropdownElements.Size = dim_offset(Items.Outline.AbsoluteSize.X + 1, Cfg.MaxHeight + 36)
+        Items.DropdownElements.Visible = bool 
+        Items.DropdownElements.Parent = bool and Library.Items or Library.Other
 
-                for _,option in Cfg.OptionInstances do 
-                    if option.Text == value or (IsTable and table.find(value, option.Text)) then 
-                        table.insert(Selected, option.Text)
-                        Cfg.MultiItems = Selected
-                        option.TextColor3 = themes.preset.text_color
-                        option.BackgroundTransparency = 0.95
+        Library:Tween(Items.Arrow, {Rotation = bool and 180 or 0})
+
+        if bool then
+            Items.SearchBox.Text = ""
+            Cfg.Query = ""
+            Cfg.FilterOptions()
+        end
+    end
+    
+    function Cfg.Set(value)
+        local Selected = {}
+        local IsTable = type(value) == "table"
+
+        for _,option in Cfg.OptionInstances do 
+            if option.Text == value or (IsTable and table.find(value, option.Text)) then 
+                table.insert(Selected, option.Text)
+                Cfg.MultiItems = Selected
+                option.TextColor3 = themes.preset.text_color
+                option.BackgroundTransparency = 0.95
+            else
+                option.TextColor3 = themes.preset.deselected
+                option.BackgroundTransparency = 1
+            end
+        end
+
+        Items.InnerText.Text = if IsTable then table.concat(Selected, ", ") else Selected[1] or ""
+        Flags[Cfg.Flag] = if IsTable then Selected else Selected[1]
+        
+        Cfg.Callback(Flags[Cfg.Flag]) 
+    end
+    
+    function Cfg.RefreshOptions(options) 
+        for _,option in Cfg.OptionInstances do 
+            option:Destroy() 
+        end
+        
+        Cfg.OptionInstances = {} 
+
+        for _,option in options do
+            local Button = Cfg.RenderOption(option)
+            
+            Button.MouseButton1Down:Connect(function()
+                if Cfg.Multi then 
+                    local Selected = table.find(Cfg.MultiItems, Button.Text)
+                    
+                    if Selected then 
+                        table.remove(Cfg.MultiItems, Selected)
                     else
-                        option.TextColor3 = themes.preset.deselected
-                        option.BackgroundTransparency = 1
+                        table.insert(Cfg.MultiItems, Button.Text)
                     end
-                end
-
-                Items.InnerText.Text = if IsTable then table.concat(Selected, ", ") else Selected[1] or ""
-                Flags[Cfg.Flag] = if IsTable then Selected else Selected[1]
-                
-                Cfg.Callback(Flags[Cfg.Flag]) 
-            end
-            
-            function Cfg.RefreshOptions(options) 
-                for _,option in Cfg.OptionInstances do 
-                    option:Destroy() 
-                end
-                
-                Cfg.OptionInstances = {} 
-
-                for _,option in options do
-                    local Button = Cfg.RenderOption(option)
                     
-                    Button.MouseButton1Down:Connect(function()
-                        if Cfg.Multi then 
-                            local Selected = table.find(Cfg.MultiItems, Button.Text)
-                            
-                            if Selected then 
-                                table.remove(Cfg.MultiItems, Selected)
-                            else
-                                table.insert(Cfg.MultiItems, Button.Text)
-                            end
-                            
-                            Cfg.Set(Cfg.MultiItems) 				
-                        else 
-                            Cfg.SetVisible(false)
-                            Cfg.Open = false
-                            
-                            Cfg.Set(Button.Text)
-                        end
-                    end)
+                    Cfg.Set(Cfg.MultiItems) 				
+                else 
+                    Cfg.SetVisible(false)
+                    Cfg.Open = false
+                    
+                    Cfg.Set(Button.Text)
                 end
-            end
-
-            Items.Outline.MouseButton1Click:Connect(function()
-                Cfg.Open = not Cfg.Open 
-
-                Cfg.SetVisible(Cfg.Open)
             end)
+        end
 
-            Library:Connection(InputService.InputBegan, function(input, game_event)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    if not Library:Hovering({Items.DropdownElements, Items.Dropdown}) then
-                        Cfg.SetVisible(false)
-                        Cfg.Open = false
-                    end 
-                end 
-            end)
+        Cfg.FilterOptions()
+    end
 
-            Flags[Cfg.Flag] = {} 
-            ConfigFlags[Cfg.Flag] = Cfg.Set
-            
-function Cfg:SetOptions(newOptions)
-    Cfg.RefreshOptions(newOptions or {})
-end
+    Items.Outline.MouseButton1Click:Connect(function()
+        Cfg.Open = not Cfg.Open 
 
-function Cfg:Update(newOptions)
-    Cfg.RefreshOptions(newOptions or {})
-end
+        Cfg.SetVisible(Cfg.Open)
+    end)
 
-Cfg.RefreshOptions(Cfg.Options)
-Cfg.Set(Cfg.Default)
+    Items.SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        Cfg.Query = Items.SearchBox.Text
+        Cfg.FilterOptions()
+    end)
 
-return setmetatable(Cfg, Library)
+    Items.SearchBox.Focused:Connect(function()
+        Items.SearchBox:CaptureFocus()
+    end)
+
+    Library:Connection(InputService.InputBegan, function(input, game_event)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if not Library:Hovering({Items.DropdownElements, Items.Dropdown}) then
+                Cfg.SetVisible(false)
+                Cfg.Open = false
+            end 
+        end 
+    end)
+
+    Flags[Cfg.Flag] = {} 
+    ConfigFlags[Cfg.Flag] = Cfg.Set
+    
+    function Cfg:SetOptions(newOptions)
+        Cfg.RefreshOptions(newOptions or {})
+    end
+
+    function Cfg:Update(newOptions)
+        Cfg.RefreshOptions(newOptions or {})
+    end
+
+    Cfg.RefreshOptions(Cfg.Options)
+    Cfg.Set(Cfg.Default)
+
+    return setmetatable(Cfg, Library)
 end
 
         function Library:Label(properties)
